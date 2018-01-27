@@ -10,6 +10,7 @@ class DefaultImageListInteractor {
 
     private let operationQueue = OperationQueue()
 
+    private var runningFetchDataFeedOperation: FetchFlickrDataFeedOperation? = nil
     private var runningOperations: [URL: Operation] = [:]
 }
 
@@ -17,9 +18,16 @@ extension DefaultImageListInteractor: ImageListInteractor {
 
     func fetchImageList() {
 
-        let fetchDataFeedOperation = FetchFlickrDataFeedOperation {
+        guard runningFetchDataFeedOperation == nil else {
+
+            return
+        }
+
+        runningFetchDataFeedOperation = FetchFlickrDataFeedOperation {
 
             (result) in
+
+            self.runningFetchDataFeedOperation = nil
 
             DispatchQueue.main.async {
 
@@ -27,7 +35,7 @@ extension DefaultImageListInteractor: ImageListInteractor {
             }
         }
 
-        operationQueue.addOperation(fetchDataFeedOperation)
+        operationQueue.addOperation(runningFetchDataFeedOperation!)
     }
 
     func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void) {
