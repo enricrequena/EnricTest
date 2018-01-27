@@ -129,8 +129,6 @@ extension ImageListViewController: ImageListView {
 
     func updateFailed(with title: String, and errorMessage: String) {
 
-		stopLoading()
-
         self.title = title
 
         displayErrorView(errorMessage)
@@ -151,6 +149,16 @@ extension ImageListViewController {
         stopLoading()
     }
 
+    private func displayErrorView(_ errorMessage: String) {
+
+        errorMessageLabel.text = errorMessage
+
+        tableView.isHidden = true
+        errorView.isHidden = false
+
+        stopLoading()
+    }
+
     private func stopLoading() {
 
         loadingView.isHidden = true
@@ -161,13 +169,8 @@ extension ImageListViewController {
         loadingView.isHidden = false
     }
 
-    private func displayErrorView(_ errorMessage: String) {
 
-        errorMessageLabel.text = errorMessage
 
-        tableView.isHidden = true
-        errorView.isHidden = false
 
-        stopLoading()
     }
 }
