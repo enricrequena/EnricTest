@@ -35,6 +35,11 @@ extension DefaultImageListPresenter: ImageListPresenter {
         view?.loading(with: Strings.ImageListView.titleForLoading, and: Strings.ImageListView.messageForLoading)
     }
 
+    func refreshTable() {
+
+        interactor.fetchImageList()
+    }
+
     func willDisplayImage(from url: URL, with completion: @escaping (UIImage) -> Void) {
 
         interactor.loadImage(from: url, with: completion)

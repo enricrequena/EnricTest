@@ -35,6 +35,18 @@ class ImageListViewControllerTests: XCTestCase {
     func testViewDidLoad() {
 
         XCTAssertEqual(mockPresenter.recordedInvocations.viewDidLoad, 1)
+
+        guard let refreshControl = viewController.tableView.refreshControl else {
+
+            XCTFail("No RefreshControl configured")
+            return
+        }
+        XCTAssertEqual(refreshControl.backgroundColor, UIColor.lightGray)
+        XCTAssertEqual(refreshControl.tintColor, UIColor.black)
+
+        refreshControl.sendActions(for: .valueChanged)
+
+        XCTAssertEqual(mockPresenter.recordedInvocations.refreshTable, 1)
     }
 
     // MARK: - IBAction
@@ -162,7 +174,9 @@ class ImageListViewControllerTests: XCTestCase {
 
     func testUpdate() {
 
+        let mockRefreshControl = MockUIRefreshControl()
         let mockTableView = MockUITableView()
+        mockTableView.refreshControl = mockRefreshControl
         viewController.tableView = mockTableView
 
         let title = "a;lsdjf;i"
@@ -177,9 +191,13 @@ class ImageListViewControllerTests: XCTestCase {
         XCTAssertEqual(viewController.errorView.isHidden, true)
         XCTAssertEqual(viewController.title, title)
         XCTAssertEqual(mockTableView.recordedInvocations.reloadData, 1)
+        XCTAssertEqual(mockRefreshControl.recordedInvocations.endRefresing, 1)
     }
 
     func testUpdateFailed() {
+
+        let mockRefreshControl = MockUIRefreshControl()
+        viewController.tableView.refreshControl = mockRefreshControl
 
         let title = "asdf55"
         let message = "43134"
@@ -191,6 +209,7 @@ class ImageListViewControllerTests: XCTestCase {
         XCTAssertEqual(viewController.tableView.isHidden, true)
         XCTAssertEqual(viewController.title, title)
         XCTAssertEqual(viewController.errorMessageLabel.text, message)
+        XCTAssertEqual(mockRefreshControl.recordedInvocations.endRefresing, 1)
     }
 
     // MARK: - UIStoryboard
@@ -291,6 +310,20 @@ private class MockUITableView: UITableView {
     override func reloadData() {
 
         recordedInvocations.reloadData += 1
+    }
+}
+
+private class MockUIRefreshControl: UIRefreshControl {
+
+    struct Invocations {
+
+        var endRefresing = 0
+    }
+    var recordedInvocations = Invocations()
+
+    override func endRefreshing() {
+
+        recordedInvocations.endRefresing += 1
     }
 }
 

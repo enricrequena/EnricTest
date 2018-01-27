@@ -55,7 +55,7 @@ class DefaultImageListPresenterTests: XCTestCase {
 
     // MARK: - ImageListPresenter
 
-    func testImageListPresenter_ViewDidLoad() {
+    func testViewDidLoad() {
 
         presenter.viewDidLoad()
 
@@ -63,6 +63,13 @@ class DefaultImageListPresenterTests: XCTestCase {
         XCTAssertEqual(mockView.recordedInvocations.loading.count, 1)
         XCTAssertEqual(mockView.recordedInvocations.loading.first?.title, Strings.ImageListView.titleForLoading)
         XCTAssertEqual(mockView.recordedInvocations.loading.first?.message, Strings.ImageListView.messageForLoading)
+    }
+
+    func refreshTable() {
+
+        presenter.refreshTable()
+
+        XCTAssertEqual(mockInteractor.recordedInvocations.fetchImageList, 1)
     }
 
     func testWillDisplayImage() {

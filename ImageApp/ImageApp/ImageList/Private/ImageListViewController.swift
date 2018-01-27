@@ -18,6 +18,8 @@ class ImageListViewController: UIViewController {
 
     override func viewDidLoad() {
 
+        configurePullDownToRefresh()
+
         presenter?.viewDidLoad()
     }
 }
@@ -162,15 +164,30 @@ extension ImageListViewController {
     private func stopLoading() {
 
         loadingView.isHidden = true
+        tableView.refreshControl?.endRefreshing()
     }
 
     private func startLoading() {
 
         loadingView.isHidden = false
     }
+}
 
+// MARK: - Pull Down To Refresh
 
+extension ImageListViewController {
 
+    private func configurePullDownToRefresh() {
 
+        let refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = .lightGray
+        refreshControl.tintColor = .black
+        refreshControl.addTarget(self, action: #selector(pulledDownTriggered), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+
+    @IBAction func pulledDownTriggered() {
+
+        presenter?.refreshTable()
     }
 }
