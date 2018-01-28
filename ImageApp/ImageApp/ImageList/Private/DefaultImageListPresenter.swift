@@ -4,12 +4,21 @@
 
 import UIKit
 
+enum SortByType {
+
+    case dateTaken
+    case datePublished
+}
+
 class DefaultImageListPresenter {
 
     let interactor: ImageListInteractor
     let adapter: DataFeedToImageListViewModelAdapter
     weak var view: ImageListView?
     let wireframe: ImageListWireframe
+
+    private var sortByType: SortByType = .datePublished
+    private var dataFeed: DataFeed? = nil
 
     init(
         interactor: ImageListInteractor,
@@ -32,7 +41,11 @@ extension DefaultImageListPresenter: ImageListPresenter {
 
         interactor.fetchImageList()
 
-        view?.loading(with: Strings.ImageListView.titleForLoading, and: Strings.ImageListView.messageForLoading)
+        view?.loading(
+			with: Strings.ImageListView.titleForLoading,
+			and: Strings.ImageListView.messageForLoading,
+			sortType: sortByType
+		)
     }
 
     func refreshTable() {
@@ -56,6 +69,12 @@ extension DefaultImageListPresenter: ImageListPresenter {
 
         view?.presentAlert(with: editTagViewModel, animated: true)
     }
+
+    func sortBy(_ type: SortByType) {
+
+        sortByType = type
+        sortAndUpdateView(with: dataFeed, by: sortByType)
+    }
 }
 
 // MARK: - ImageListInteractorOutput
@@ -68,14 +87,13 @@ extension DefaultImageListPresenter: ImageListInteractorOutput {
 
             case let .success(dataFeed):
 
-                let viewModel = adapter.convert(dataFeed: dataFeed)
-                view?.update(with: viewModel)
+                self.dataFeed = dataFeed
+                sortAndUpdateView(with: dataFeed, by: sortByType)
 
             case let .failure(error):
 
                 let errorMessage = adapter.convert(error: error)
                 view?.updateFailed(with: Strings.ImageListView.titleForError, and: errorMessage)
-
         }
     }
 }
@@ -99,5 +117,17 @@ extension DefaultImageListPresenter {
         }
 
 		return editTagViewModel
+    }
+
+    private func sortAndUpdateView(with dataFeed: DataFeed?, by type: SortByType) {
+
+        guard let dataFeed = dataFeed else {
+
+            return
+        }
+
+        let viewModel = adapter.convert(dataFeed: dataFeed, sortedBy: type)
+
+        view?.update(with: viewModel)
     }
 }

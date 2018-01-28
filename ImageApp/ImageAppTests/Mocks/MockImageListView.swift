@@ -8,19 +8,24 @@ class MockImageListView {
 
     struct Invocations {
 
-        var loading = [(title: String, message: String)]()
+        var loading = [(title: String, message: String, sortType: SortByType)]()
         var update = [ImageListViewModel]()
         var updateFailed = [(title: String, errorMessage: String)]()
         var presentAlert = [(viewModel: EditTagsViewModel, animated: Bool)]()
     }
     var recordedInvocations = Invocations()
+
+    func reset() {
+
+        recordedInvocations = Invocations()
+    }
 }
 
 extension MockImageListView: ImageListView {
 
-    func loading(with title: String, and message: String) {
+    func loading(with title: String, and message: String, sortType: SortByType) {
 
-        recordedInvocations.loading.append((title, message))
+        recordedInvocations.loading.append((title, message, sortType))
     }
 
     func update(with viewModel: ImageListViewModel) {

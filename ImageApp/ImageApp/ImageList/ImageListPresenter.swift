@@ -11,4 +11,5 @@ protocol ImageListPresenter: class {
     func willDisplayImage(from url: URL, with completion: @escaping (UIImage) -> Void)
     func endDisplayingImage(from url: URL)
     func editTagsRequest()
+    func sortBy(_ type: SortByType)
 }

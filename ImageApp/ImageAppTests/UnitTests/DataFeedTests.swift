@@ -59,6 +59,17 @@ class DataFeedTests: XCTestCase {
         XCTAssertNotEqual(a, b)
     }
 
+    func testDataFeedItem_Different_DateTaken() {
+
+        let a = DataFeed.Item.Builder()
+            .withDateTaken(Date())
+            .build()
+        let b = DataFeed.Item.Builder()
+            .withDateTaken(Date().addingTimeInterval(8001))
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+
     func testDataFeedItem_Different_Published() {
 
         let a = DataFeed.Item.Builder()

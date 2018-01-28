@@ -63,6 +63,7 @@ class DefaultImageListPresenterTests: XCTestCase {
         XCTAssertEqual(mockView.recordedInvocations.loading.count, 1)
         XCTAssertEqual(mockView.recordedInvocations.loading.first?.title, Strings.ImageListView.titleForLoading)
         XCTAssertEqual(mockView.recordedInvocations.loading.first?.message, Strings.ImageListView.messageForLoading)
+        XCTAssertEqual(mockView.recordedInvocations.loading.first?.sortType, SortByType.datePublished)
     }
 
     func testRefreshTable() {
@@ -130,6 +131,31 @@ class DefaultImageListPresenterTests: XCTestCase {
         XCTAssertEqual(mockInteractor.recordedInvocations.fetchImageListWithTags, [expectedNewTag])
     }
 
+    func testSortBy() {
+
+        let sortedBy = SortByType.dateTaken
+
+        let item1 = DataFeed.Item.Builder()
+            .withDateTaken(Date())
+            .build()
+        let item2 = DataFeed.Item.Builder()
+            .withDateTaken(Date().addingTimeInterval(98789))
+            .build()
+        let dataFeed = DataFeed.Builder()
+            .withItems([item1, item2])
+            .build()
+		presenter.didFetch(result: .success(dataFeed))
+		mockView.reset()
+		mockAdapter.reset()
+
+        presenter.sortBy(.dateTaken)
+
+        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed.count, 1)
+        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed.first?.dataFeed, dataFeed)
+        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed.first?.sortedBy, sortedBy)
+        XCTAssertEqual(mockView.recordedInvocations.update, [mockAdapter.returnValues.convert])
+    }
+
     // MARK: - ImageListInteractorOutput
 
     func testImageListInteractorOutput_DidFetchDateFeed_WithSuccess() {
@@ -140,7 +166,9 @@ class DefaultImageListPresenterTests: XCTestCase {
 
         presenter.didFetch(result: .success(dataFeed))
 
-        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed, [dataFeed])
+        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed.count, 1)
+        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed.first?.dataFeed, dataFeed)
+        XCTAssertEqual(mockAdapter.recordedInvocations.convertDataFeed.first?.sortedBy, SortByType.datePublished)
         XCTAssertEqual(mockView.recordedInvocations.update, [mockAdapter.returnValues.convert])
     }
 

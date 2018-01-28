@@ -12,6 +12,8 @@ class StringsTests: XCTestCase {
         XCTAssertEqual(Strings.ImageListView.titleForError, "Oops, something failed")
         XCTAssertEqual(Strings.ImageListView.titleForLoading, "Loading ...")
         XCTAssertEqual(Strings.ImageListView.messageForLoading, "Loading feed, please wait, won't be long.")
+        XCTAssertEqual(Strings.ImageListView.dateCreated, "Created")
+        XCTAssertEqual(Strings.ImageListView.datePublished, "Published")
 
         XCTAssertEqual(Strings.ImageListView.EditTag.alertTitle, "Edit tag")
         XCTAssertEqual(Strings.ImageListView.EditTag.alertMessage, "Enter your new tags below")

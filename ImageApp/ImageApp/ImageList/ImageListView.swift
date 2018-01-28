@@ -4,7 +4,7 @@
 
 protocol ImageListView: class {
 
-	func loading(with title: String, and message: String)
+	func loading(with title: String, and message: String, sortType: SortByType)
     func update(with viewModel: ImageListViewModel)
     func updateFailed(with title: String, and errorMessage: String)
     func presentAlert(with viewModel: EditTagsViewModel, animated: Bool)

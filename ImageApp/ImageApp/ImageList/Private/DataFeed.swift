@@ -12,6 +12,7 @@ struct DataFeed {
     struct Item {
 
         let title: String
+        let dateTaken: Date
         let published: Date
         let link: URL
         let imageURL: URL
@@ -32,10 +33,10 @@ extension DataFeed.Item: Equatable {
 
     static func ==(lhs: DataFeed.Item, rhs: DataFeed.Item) -> Bool {
         return lhs.title == rhs.title &&
-        lhs.published == rhs.published &&
-        lhs.link == rhs.link &&
-        lhs.imageURL == rhs.imageURL
+            lhs.dateTaken == rhs.dateTaken &&
+            lhs.published == rhs.published &&
+            lhs.link == rhs.link &&
+            lhs.imageURL == rhs.imageURL
     }
 }
-
 

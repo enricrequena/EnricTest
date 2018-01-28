@@ -9,6 +9,8 @@ enum Strings {
         static let titleForError = "Oops, something failed"
         static let titleForLoading = "Loading ..."
         static let messageForLoading = "Loading feed, please wait, won't be long."
+        static let dateCreated = "Created"
+        static let datePublished = "Published"
 
         enum EditTag {
 

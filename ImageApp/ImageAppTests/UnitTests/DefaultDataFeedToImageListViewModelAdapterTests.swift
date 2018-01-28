@@ -25,9 +25,11 @@ class DefaultDataFeedToImageListViewModelAdapterTests: XCTestCase {
 
     func testConvertDataFeed() {
 
-        let example = makeExample()
+		let sortType = SortByType.datePublished
 
-        let imageListViewModel = adapter.convert(dataFeed: example.dataFeed)
+		let example = makeExample(sortType: sortType)
+
+		let imageListViewModel = adapter.convert(dataFeed: example.dataFeed, sortedBy: sortType)
 
         XCTAssertEqual(imageListViewModel, example.expectedImageListViewModel)
     }
@@ -55,11 +57,11 @@ class DefaultDataFeedToImageListViewModelAdapterTests: XCTestCase {
 
 extension DefaultDataFeedToImageListViewModelAdapterTests {
 
-    private func makeExample() -> (dataFeed: DataFeed, expectedImageListViewModel: ImageListViewModel) {
+    private func makeExample(sortType: SortByType) -> (dataFeed: DataFeed, expectedImageListViewModel: ImageListViewModel) {
 
         let dataFeed = makeDataFeed()
 
-        let expectedImageListViewModel = makeExpectedImageListViewModel(from: dataFeed)
+        let expectedImageListViewModel = makeExpectedImageListViewModel(from: dataFeed, sortType: sortType)
 
         return (dataFeed, expectedImageListViewModel)
     }
@@ -69,19 +71,23 @@ extension DefaultDataFeedToImageListViewModelAdapterTests {
         let feedTitle = "This is a title"
 
         let item1Title = "First item title"
-        let item1Published = ISO8601DateFormatter().date(from: "2018-01-25T6:27:33-08:00")!
+        let item1DateTaken = ISO8601DateFormatter().date(from: "2018-01-25T6:27:33-08:00")!
+        let item1Published = ISO8601DateFormatter().date(from: "2018-01-25T6:27:33-15:00")!
         let item1ImageUrl = URL(string: "https://www.flickr.com/1")!
         let item1 = DataFeed.Item.Builder()
             .withTitle(item1Title)
+            .withDateTaken(item1DateTaken)
             .withPublished(item1Published)
             .withImageURL(item1ImageUrl)
             .build()
 
         let item2Title = "Second item title"
-        let item2Published = ISO8601DateFormatter().date(from: "2018-01-25T6:27:33-08:00")!
+        let item2DateTaken = ISO8601DateFormatter().date(from: "2018-01-24T6:27:33-08:00")!
+        let item2Published = ISO8601DateFormatter().date(from: "2018-01-24T6:27:33-15:00")!
         let item2ImageUrl = URL(string: "https://www.flickr.com/2")!
         let item2 = DataFeed.Item.Builder()
             .withTitle(item2Title)
+            .withDateTaken(item2DateTaken)
             .withPublished(item2Published)
             .withImageURL(item2ImageUrl)
             .build()
@@ -94,18 +100,15 @@ extension DefaultDataFeedToImageListViewModelAdapterTests {
         return dataFeed
     }
 
-    private func makeExpectedImageListViewModel(from dataFeed: DataFeed) -> ImageListViewModel {
-
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = .withFullDate
+	private func makeExpectedImageListViewModel(from dataFeed: DataFeed, sortType: SortByType) -> ImageListViewModel {
 
         let items: [ImageListViewModel.Item] = dataFeed.items.flatMap {
 
-            let publishedAt = dateFormatter.string(from: $0.published)
+            let dateInfo = makeFormattedDateInfo(from: $0.published, sortType: sortType)
 
             let item = ImageListViewModel.Item.Builder()
                 .withName($0.title)
-                .withPublishedAt(publishedAt)
+                .withDateInfo(dateInfo)
                 .withImageUrl($0.imageURL)
                 .build()
 
@@ -118,6 +121,31 @@ extension DefaultDataFeedToImageListViewModelAdapterTests {
             .build()
 
         return imageListViewModel
+    }
+
+	private func makeFormattedDateInfo(from published: Date, sortType: SortByType) -> String {
+
+        let dateFormatter = ISO8601DateFormatter()
+
+        dateFormatter.formatOptions = .withFullDate
+        let dateString = dateFormatter.string(from: published)
+
+        dateFormatter.formatOptions = .withFullTime
+        let timeString = dateFormatter.string(from: published).dropLast()
+
+        let prefix: String
+        switch sortType {
+
+        case .dateTaken:
+
+            prefix = Strings.ImageListView.dateCreated
+
+        case .datePublished:
+
+            prefix = Strings.ImageListView.datePublished
+
+        }
+        return "\(prefix): \(dateString) \(timeString)"
     }
 }
 

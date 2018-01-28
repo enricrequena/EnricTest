@@ -15,6 +15,7 @@ class ImageListViewController: UIViewController {
     @IBOutlet weak var errorView: UIView!
     @IBOutlet weak var errorMessageLabel: UILabel!
     @IBOutlet weak var retryButton: UIButton!
+	@IBOutlet weak var sortSegmentedControl: UISegmentedControl!
 
     override func viewDidLoad() {
 
@@ -39,6 +40,13 @@ extension ImageListViewController {
 
 		presenter?.editTagsRequest()
     }
+
+	@IBAction func sortValueChanged() {
+
+		let sortType: SortByType = sortSegmentedControl.selectedSegmentIndex == 0 ? .dateTaken : .datePublished
+
+		presenter?.sortBy(sortType)
+	}
 }
 
 // MARK: - UITableViewDataSource
@@ -124,12 +132,23 @@ extension ImageListViewController: UITableViewDelegate {
 
 extension ImageListViewController: ImageListView {
 
-    func loading(with title: String, and message: String) {
+    func loading(with title: String, and message: String, sortType: SortByType) {
 
         startLoading()
 
         self.title = title
         loadingMessageLabel.text = message
+
+        switch sortType {
+
+            case .dateTaken:
+
+                sortSegmentedControl.selectedSegmentIndex = 0
+
+            case .datePublished:
+
+                sortSegmentedControl.selectedSegmentIndex = 1
+        }
     }
 
     func update(with viewModel: ImageListViewModel) {

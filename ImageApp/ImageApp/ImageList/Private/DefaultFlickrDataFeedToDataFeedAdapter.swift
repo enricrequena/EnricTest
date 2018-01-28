@@ -26,7 +26,8 @@ extension DefaultFlickrDataFeedToDataFeedAdapter {
 
         return flickrDataFeed.items.flatMap {
 
-            guard let published = makePublished(from: $0.published),
+            guard let dateTaken = makeDate(from: $0.published),
+                  let published = makeDate(from: $0.published),
                   let link = makeURL(from: $0.link),
                   let imageURL = makeURL(from: $0.media.m) else {
 
@@ -35,6 +36,7 @@ extension DefaultFlickrDataFeedToDataFeedAdapter {
 
             return DataFeed.Item(
                 title: $0.title,
+                dateTaken: dateTaken,
                 published: published,
                 link: link,
                 imageURL: imageURL
@@ -42,7 +44,7 @@ extension DefaultFlickrDataFeedToDataFeedAdapter {
         }
     }
 
-    private func makePublished(from dateString: String) -> Date? {
+    private func makeDate(from dateString: String) -> Date? {
 
         let isoDateFormatter = ISO8601DateFormatter()
 

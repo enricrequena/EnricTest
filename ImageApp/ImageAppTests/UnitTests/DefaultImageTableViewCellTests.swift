@@ -42,7 +42,7 @@ class DefaultImageTableViewCellTests: XCTestCase {
 
         let publishedAt = "some string"
         let item = ImageListViewModel.Item.Builder()
-            .withPublishedAt(publishedAt)
+            .withDateInfo(publishedAt)
             .build()
 
         cell.update(with: item)

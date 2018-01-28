@@ -41,9 +41,18 @@ class DefaultFlickrDataFeedToDataFeedAdapterTests: XCTestCase {
         XCTAssertEqual(dataFeed, example.expectedDataFeed)
     }
 
-    func testConvert_InvalidExample_WrongDate() {
+    func testConvert_InvalidExample_WrongDateTaken() {
 
-        let example = makeInvalidExample_WrongDate()
+        let example = makeInvalidExample_WrongDateTaken()
+
+        let dataFeed = adapter.convert(flickrDataFeed: example.flickrDataFeed)
+
+        XCTAssertEqual(dataFeed, example.expectedDataFeed)
+    }
+
+    func testConvert_InvalidExample_WrongPublished() {
+
+        let example = makeInvalidExample_WrongPublished()
 
         let dataFeed = adapter.convert(flickrDataFeed: example.flickrDataFeed)
 
@@ -75,10 +84,12 @@ extension DefaultFlickrDataFeedToDataFeedAdapterTests {
 
     private func makeFlickrDataFeed() -> FlickrDataFeed {
 
-        let dateItem1String = ISO8601DateFormatter().string(from: Date())
+        let dateTaken1String = ISO8601DateFormatter().string(from: Date())
+        let publishedItem1String = ISO8601DateFormatter().string(from: Date().addingTimeInterval(2334))
         let item1 = FlickrDataFeed.Item.Builder()
             .withTitle("Item 1 title")
-            .withPublished(dateItem1String)
+            .withPublished(dateTaken1String)
+            .withPublished(publishedItem1String)
             .withLink("https://www.flickr.com/link/1")
             .withMedia(
                 FlickrDataFeed.Item.Media.Builder()
@@ -87,10 +98,12 @@ extension DefaultFlickrDataFeedToDataFeedAdapterTests {
             )
             .build()
 
-        let dateItem2String = ISO8601DateFormatter().string(from: Date().addingTimeInterval(1324))
+        let dateTakenItem2String = ISO8601DateFormatter().string(from: Date().addingTimeInterval(573))
+        let publishedItem2String = ISO8601DateFormatter().string(from: Date().addingTimeInterval(71324))
         let item2 = FlickrDataFeed.Item.Builder()
             .withTitle("Item 2 title")
-            .withPublished(dateItem2String)
+            .withDate_taken(dateTakenItem2String)
+            .withPublished(publishedItem2String)
             .withLink("https://www.flickr.com/link/1")
             .withMedia(
                 FlickrDataFeed.Item.Media.Builder()
@@ -113,7 +126,8 @@ extension DefaultFlickrDataFeedToDataFeedAdapterTests {
 
         let items: [DataFeed.Item] = flickrDataFeed.items.flatMap {
 
-            guard let publishedDate = dateFormatter.date(from: $0.published),
+            guard let dateTaken = dateFormatter.date(from: $0.published),
+                  let publishedDate = dateFormatter.date(from: $0.published),
                   let linkURL = URL(string: $0.link),
                   let imageURL = URL(string: $0.media.m) else {
 
@@ -122,6 +136,7 @@ extension DefaultFlickrDataFeedToDataFeedAdapterTests {
 
             let item = DataFeed.Item.Builder()
                 .withTitle($0.title)
+                .withDateTaken(dateTaken)
                 .withPublished(publishedDate)
                 .withImageURL(imageURL)
                 .withLink(linkURL)
@@ -194,7 +209,30 @@ extension DefaultFlickrDataFeedToDataFeedAdapterTests {
         return (flickrDataFeed, expectedDataFeed)
     }
 
-    private func makeInvalidExample_WrongDate() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
+    private func makeInvalidExample_WrongDateTaken() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
+
+        let item1 = FlickrDataFeed.Item.Builder()
+            .withTitle("Item 1 title")
+            .withDate_taken("55")
+            .withLink("https://www.flickr.com/1")
+            .withMedia(
+                FlickrDataFeed.Item.Media.Builder()
+                    .withM("")
+                    .build()
+            )
+            .build()
+
+        let flickrDataFeed = FlickrDataFeed.Builder()
+            .withTitle("This is a title 532")
+            .withItems([item1])
+            .build()
+
+        let expectedDataFeed = makeExpectedDataFeed_WithNoItems(from: flickrDataFeed)
+        return (flickrDataFeed, expectedDataFeed)
+
+    }
+
+    private func makeInvalidExample_WrongPublished() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
 
         let item1 = FlickrDataFeed.Item.Builder()
             .withTitle("Item 1 title")

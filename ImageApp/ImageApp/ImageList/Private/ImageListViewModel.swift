@@ -12,7 +12,7 @@ struct ImageListViewModel {
     struct Item {
 
         let name: String
-        let publishedAt: String
+        let dateInfo: String
         let imageUrl: URL
     }
 }
@@ -41,7 +41,7 @@ extension ImageListViewModel.Item: Equatable {
 
     static func ==(lhs: ImageListViewModel.Item, rhs: ImageListViewModel.Item) -> Bool {
         return lhs.name == rhs.name &&
-            lhs.publishedAt == rhs.publishedAt &&
+            lhs.dateInfo == rhs.dateInfo &&
             lhs.imageUrl == rhs.imageUrl
     }
 }

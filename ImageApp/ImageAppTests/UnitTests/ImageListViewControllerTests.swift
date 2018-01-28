@@ -19,7 +19,6 @@ class ImageListViewControllerTests: XCTestCase {
         viewController.presenter = mockPresenter
 
         viewController.loadViewIfNeeded()
-
     }
 
     override func tearDown() {
@@ -67,6 +66,28 @@ class ImageListViewControllerTests: XCTestCase {
         viewController.tagsButtonTapped()
 
         XCTAssertEqual(mockPresenter.recordedInvocations.editTagsRequest, 1)
+    }
+
+    func testSortValueChanged_DateTaken() {
+
+        viewController.sortSegmentedControl.selectedSegmentIndex = 0
+        let viewModel = ImageListViewModel.Builder().build()
+        viewController.update(with: viewModel)
+
+        viewController.sortValueChanged()
+
+        XCTAssertEqual(mockPresenter.recordedInvocations.sortBy, [SortByType.dateTaken])
+    }
+
+    func testSortValueChanged_DatePublished() {
+
+        viewController.sortSegmentedControl.selectedSegmentIndex = 1
+        let viewModel = ImageListViewModel.Builder().build()
+        viewController.update(with: viewModel)
+
+        viewController.sortValueChanged()
+
+        XCTAssertEqual(mockPresenter.recordedInvocations.sortBy, [SortByType.datePublished])
     }
 
     // MARK: - UITableViewDataSource
@@ -139,10 +160,10 @@ class ImageListViewControllerTests: XCTestCase {
         )
 
         let item1 = ImageListViewModel.Item.Builder()
-            .withPublishedAt("asdfasfd")
+            .withDateInfo("asdfasfd")
             .build()
         let item2 = ImageListViewModel.Item.Builder()
-            .withPublishedAt("08918012")
+            .withDateInfo("08918012")
             .build()
         let viewModel = ImageListViewModel.Builder()
             .withItems([item1, item2])
@@ -169,16 +190,30 @@ class ImageListViewControllerTests: XCTestCase {
 
     // MARK: - ImageListView
 
-    func testLoading() {
+    func testLoading_DateTaken() {
 
         let title = "asdf55"
         let message = "43134"
 
-        viewController.loading(with: title, and: message)
+        viewController.loading(with: title, and: message, sortType: .dateTaken)
 
         XCTAssertEqual(viewController.loadingView.isHidden, false)
         XCTAssertEqual(viewController.title, title)
         XCTAssertEqual(viewController.loadingMessageLabel.text, message)
+        XCTAssertEqual(viewController.sortSegmentedControl.selectedSegmentIndex, 0)
+    }
+
+    func testLoading_DatePublished() {
+
+        let title = "as4421df55"
+        let message = "431as234"
+
+        viewController.loading(with: title, and: message, sortType: .datePublished)
+
+        XCTAssertEqual(viewController.loadingView.isHidden, false)
+        XCTAssertEqual(viewController.title, title)
+        XCTAssertEqual(viewController.loadingMessageLabel.text, message)
+        XCTAssertEqual(viewController.sortSegmentedControl.selectedSegmentIndex, 1)
     }
 
     func testUpdate() {
@@ -302,10 +337,10 @@ extension ImageListViewControllerTests {
     private func makeDefaultViewModel() -> ImageListViewModel {
 
         let item1 = ImageListViewModel.Item.Builder()
-            .withPublishedAt("asdfasfd")
+            .withDateInfo("asdfasfd")
             .build()
         let item2 = ImageListViewModel.Item.Builder()
-            .withPublishedAt("08918012")
+            .withDateInfo("08918012")
             .build()
         return ImageListViewModel.Builder()
             .withItems([item1, item2])

@@ -63,13 +63,13 @@ class ImageListViewModelTests: XCTestCase {
         XCTAssertNotEqual(a, b)
     }
 
-    func testImageListViewModelItem_Different_PublishedAt() {
+    func testImageListViewModelItem_Different_DateInfo() {
 
         let a = ImageListViewModel.Item.Builder()
-            .withPublishedAt("2oij")
+            .withDateInfo("2oij")
             .build()
         let b = ImageListViewModel.Item.Builder()
-            .withPublishedAt("2oasdfij")
+            .withDateInfo("2oasdfij")
             .build()
         XCTAssertNotEqual(a, b)
     }

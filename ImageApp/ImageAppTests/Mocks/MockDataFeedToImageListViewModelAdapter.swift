@@ -8,7 +8,7 @@ class MockDataFeedToImageListViewModelAdapter {
 
     struct Invocations {
 
-        var convertDataFeed = [DataFeed]()
+		var convertDataFeed = [(dataFeed: DataFeed, sortedBy: SortByType)]()
         var convertError = [Error]()
     }
     var recordedInvocations = Invocations()
@@ -19,13 +19,19 @@ class MockDataFeedToImageListViewModelAdapter {
         var convertError: String = "Error"
     }
     var returnValues = Return()
+
+	func reset() {
+
+		recordedInvocations = Invocations()
+		returnValues = Return()
+	}
 }
 
 extension MockDataFeedToImageListViewModelAdapter: DataFeedToImageListViewModelAdapter {
 
-    func convert(dataFeed: DataFeed) -> ImageListViewModel {
+	func convert(dataFeed: DataFeed, sortedBy: SortByType) -> ImageListViewModel {
 
-        recordedInvocations.convertDataFeed.append(dataFeed)
+        recordedInvocations.convertDataFeed.append((dataFeed, sortedBy))
 
         return returnValues.convert
     }

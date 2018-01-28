@@ -13,6 +13,6 @@ class DefaultImageTableViewCell: UITableViewCell {
 
     func update(with item: ImageListViewModel.Item) {
 
-        publishedAt.text = item.publishedAt
+        publishedAt.text = item.dateInfo
     }
 }

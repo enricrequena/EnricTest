@@ -14,6 +14,7 @@ class MockImageListPresenter {
         var willDisplayImage = [(url: URL, completion: (UIImage) -> Void)]()
         var endDisplayingImage = [URL]()
         var editTagsRequest = 0
+        var sortBy = [SortByType]()
     }
     var recordedInvocations = Invocations()
 
@@ -48,5 +49,10 @@ extension MockImageListPresenter: ImageListPresenter {
     func editTagsRequest() {
 
         recordedInvocations.editTagsRequest += 1
+    }
+
+	func sortBy(_ type: SortByType) {
+
+        recordedInvocations.sortBy.append(type)
     }
 }

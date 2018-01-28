@@ -40,7 +40,7 @@ extension ImageListViewModel.Item {
 
     struct Builder {
         var name: String = "name"
-        var publishedAt: String = "publishedAt"
+        var dateInfo: String = "dateInfo"
         var imageUrl: URL = URL(string: "https://www.flickr.com")!
 
         func withName(_ name: String) -> Builder {
@@ -49,9 +49,9 @@ extension ImageListViewModel.Item {
             return builder
         }
 
-        func withPublishedAt(_ publishedAt: String) -> Builder {
+        func withDateInfo(_ dateInfo: String) -> Builder {
             var builder = self
-            builder.publishedAt = publishedAt
+            builder.dateInfo = dateInfo
             return builder
         }
 
@@ -64,7 +64,7 @@ extension ImageListViewModel.Item {
         func build() -> ImageListViewModel.Item {
             return ImageListViewModel.Item(
                 name: self.name,
-                publishedAt: self.publishedAt,
+                dateInfo: self.dateInfo,
                 imageUrl: self.imageUrl)
         }
     }
@@ -163,13 +163,20 @@ extension DataFeed.Item {
     struct Builder {
 
         var title: String = "title"
-        var published: Date = ISO8601DateFormatter().date(from: "2018-01-24T19:27:33-08:00")!
+        var dateTaken: Date = ISO8601DateFormatter().date(from: "2018-01-24T19:27:33-08:00")!
+        var published: Date = ISO8601DateFormatter().date(from: "2018-01-24T19:27:33-17:00")!
         var link: URL = URL(string: "https://www.flickr.com/223")!
         var imageURL: URL = URL(string: "https://www.flickr.com/4234")!
 
         func withTitle(_ title: String) -> Builder {
             var builder = self
             builder.title = title
+            return builder
+        }
+
+        func withDateTaken(_ dateTaken: Date) -> Builder {
+            var builder = self
+            builder.dateTaken = dateTaken
             return builder
         }
 
@@ -194,6 +201,7 @@ extension DataFeed.Item {
         func build() -> DataFeed.Item {
             return DataFeed.Item(
                 title: self.title,
+                dateTaken: self.dateTaken,
                 published: self.published,
                 link: self.link,
                 imageURL: self.imageURL)
