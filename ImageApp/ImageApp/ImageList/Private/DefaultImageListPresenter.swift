@@ -113,6 +113,12 @@ extension DefaultImageListPresenter {
 
             tags in
 
+			self.view?.loading(
+				with: Strings.ImageListView.titleForLoading,
+				and: Strings.ImageListView.messageForLoading,
+				sortType: self.sortByType
+			)
+
             self.interactor.fetchImageList(with: tags)
         }
 

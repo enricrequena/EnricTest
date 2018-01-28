@@ -129,6 +129,9 @@ class DefaultImageListPresenterTests: XCTestCase {
         completionBlock(expectedNewTag)
 
         XCTAssertEqual(mockInteractor.recordedInvocations.fetchImageListWithTags, [expectedNewTag])
+        XCTAssertEqual(mockView.recordedInvocations.loading.first?.title, Strings.ImageListView.titleForLoading)
+        XCTAssertEqual(mockView.recordedInvocations.loading.first?.message, Strings.ImageListView.messageForLoading)
+        XCTAssertEqual(mockView.recordedInvocations.loading.first?.sortType, SortByType.datePublished)
     }
 
     func testSortBy() {
