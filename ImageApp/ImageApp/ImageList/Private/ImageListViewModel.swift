@@ -17,6 +17,16 @@ struct ImageListViewModel {
     }
 }
 
+struct EditTagsViewModel {
+
+    let title: String
+    let message: String
+    let textFieldPlaceHolder: String
+    let buttonTitle: String
+    let cancelButtonTitle: String
+    let completion: ((String) -> Void)?
+}
+
 // MARK: - Equatable extension
 
 extension ImageListViewModel: Equatable {
@@ -36,3 +46,13 @@ extension ImageListViewModel.Item: Equatable {
     }
 }
 
+extension EditTagsViewModel: Equatable {
+
+    static func ==(lhs: EditTagsViewModel, rhs: EditTagsViewModel) -> Bool {
+        return lhs.title == rhs.title &&
+            lhs.message == rhs.message &&
+            lhs.textFieldPlaceHolder == rhs.textFieldPlaceHolder &&
+            lhs.buttonTitle == rhs.buttonTitle &&
+            lhs.cancelButtonTitle == rhs.cancelButtonTitle
+    }
+}

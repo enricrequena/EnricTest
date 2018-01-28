@@ -7,11 +7,13 @@ import ReachabilitySwift
 
 class FetchFlickrDataFeedOperation: Operation {
 
-    private let url = URL(string: "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=cats")!
+    private let url = URL(string: "https://api.flickr.com/services/feeds/photos_public.gne?format=json")!
+    private let tags: String
     private let completion: ((Result<DataFeed>) -> Void)
 
-    init(completion: @escaping (Result<DataFeed>) -> Void) {
+    init(tags: String, completion: @escaping (Result<DataFeed>) -> Void) {
 
+        self.tags = tags
         self.completion = completion
 
         super.init()
@@ -29,6 +31,8 @@ class FetchFlickrDataFeedOperation: Operation {
 			completion(.failure(NetworkError.failedToLoadData(message: "No internet connection, please check your network settings.")))
 			return
 		}
+
+        let url = makeURL(with: tags)
 
         guard let data = try? Data(contentsOf: url) else {
 
@@ -72,6 +76,25 @@ class FetchFlickrDataFeedOperation: Operation {
         }
 
         completion(.success(dataFeed))
+    }
+
+    private func makeURL(with tags: String) -> URL {
+
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+
+            return url
+        }
+
+        let urlQueryItem = URLQueryItem(name: "tags", value: tags)
+
+        urlComponents.queryItems?.append(urlQueryItem)
+
+        guard let urlWithTags = urlComponents.url else {
+
+            return url
+        }
+
+        return urlWithTags
     }
 }
 

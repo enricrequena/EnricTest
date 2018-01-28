@@ -49,6 +49,13 @@ extension DefaultImageListPresenter: ImageListPresenter {
 
         interactor.cancelImage(from: url)
     }
+
+    func editTagsRequest() {
+
+        let editTagViewModel = makeEditTagViewModel()
+
+        view?.presentAlert(with: editTagViewModel, animated: true)
+    }
 }
 
 // MARK: - ImageListInteractorOutput
@@ -70,5 +77,27 @@ extension DefaultImageListPresenter: ImageListInteractorOutput {
                 view?.updateFailed(with: Strings.ImageListView.titleForError, and: errorMessage)
 
         }
+    }
+}
+
+// MARK: - Helpers
+
+extension DefaultImageListPresenter {
+
+    private func makeEditTagViewModel() -> EditTagsViewModel {
+
+        let editTagViewModel = EditTagsViewModel(
+            title: Strings.ImageListView.EditTag.alertTitle,
+            message: Strings.ImageListView.EditTag.alertMessage,
+            textFieldPlaceHolder: Strings.ImageListView.EditTag.textFieldPlaceHolder,
+            buttonTitle: Strings.ImageListView.EditTag.buttonTitle,
+            cancelButtonTitle: Strings.ImageListView.EditTag.cancelButtonTitle) {
+
+            tags in
+
+            self.interactor.fetchImageList(with: tags)
+        }
+
+		return editTagViewModel
     }
 }

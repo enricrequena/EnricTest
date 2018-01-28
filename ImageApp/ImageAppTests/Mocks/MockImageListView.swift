@@ -11,6 +11,7 @@ class MockImageListView {
         var loading = [(title: String, message: String)]()
         var update = [ImageListViewModel]()
         var updateFailed = [(title: String, errorMessage: String)]()
+        var presentAlert = [(viewModel: EditTagsViewModel, animated: Bool)]()
     }
     var recordedInvocations = Invocations()
 }
@@ -30,5 +31,10 @@ extension MockImageListView: ImageListView {
     func updateFailed(with title: String, and errorMessage: String) {
 
         recordedInvocations.updateFailed.append((title, errorMessage))
+    }
+
+    func presentAlert(with viewModel: EditTagsViewModel, animated: Bool) {
+
+        recordedInvocations.presentAlert.append((viewModel, animated))
     }
 }

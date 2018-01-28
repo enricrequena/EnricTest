@@ -10,6 +10,7 @@ class MockImageListInteractor {
     struct Invocations {
 
         var fetchImageList = 0
+        var fetchImageListWithTags = [String]()
         var loadImage = [(url: URL, completion: ((UIImage) -> Void))]()
         var cancelImage = [URL]()
     }
@@ -21,6 +22,11 @@ extension MockImageListInteractor: ImageListInteractor {
     func fetchImageList() {
 
         recordedInvocations.fetchImageList += 1
+    }
+
+    func fetchImageList(with tags: String) {
+
+        recordedInvocations.fetchImageListWithTags.append(tags)
     }
 
     func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void) {

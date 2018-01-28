@@ -47,17 +47,26 @@ class ImageListViewControllerTests: XCTestCase {
         refreshControl.sendActions(for: .valueChanged)
 
         XCTAssertEqual(mockPresenter.recordedInvocations.refreshTable, 1)
+
+		XCTAssertEqual(viewController.tableView.tableFooterView?.frame.height, 0)
     }
 
     // MARK: - IBAction
 
-    func testRetry() {
+    func testRetryTapped() {
 
         mockPresenter.reset()
 
         viewController.retryButton.sendActions(for: .touchUpInside)
 
         XCTAssertEqual(mockPresenter.recordedInvocations.viewDidLoad, 1)
+    }
+
+    func testTagsButtonTapped() {
+
+        viewController.tagsButtonTapped()
+
+        XCTAssertEqual(mockPresenter.recordedInvocations.editTagsRequest, 1)
     }
 
     // MARK: - UITableViewDataSource
@@ -212,6 +221,12 @@ class ImageListViewControllerTests: XCTestCase {
         XCTAssertEqual(mockRefreshControl.recordedInvocations.endRefresing, 1)
     }
 
+    func testPresentAlert() {
+
+        // For this test we will write a UI test as we will need to mock few UIKit elements to test the right behaviour
+        // through UnitTests. UIKit components often are not straight forward to test.
+    }
+
     // MARK: - UIStoryboard
 
     func testStoryboard() {
@@ -248,7 +263,7 @@ class ImageListViewControllerTests: XCTestCase {
         XCTAssertEqual(mockPresenter.recordedInvocations.willDisplayImage.count, 1)
         XCTAssertEqual(mockPresenter.recordedInvocations.willDisplayImage.first?.url, viewModel.items.first!.imageUrl)
 
-        let image = #imageLiteral(resourceName: "options-icon")
+        let image = #imageLiteral(resourceName: "tag-image")
         mockPresenter.recordedInvocations.willDisplayImage.first!.completion(image)
 
         wait(for: [expectation], timeout: 1)
@@ -256,7 +271,7 @@ class ImageListViewControllerTests: XCTestCase {
         XCTAssert(mockUIImageView.image === image)
     }
 
-    func testtableViewDidEndDisplayingForRowAt() {
+    func testTableViewDidEndDisplayingForRowAt() {
 
         let viewModel = makeDefaultViewModel()
 
@@ -270,7 +285,6 @@ class ImageListViewControllerTests: XCTestCase {
         XCTAssertEqual(mockPresenter.recordedInvocations.endDisplayingImage.count, 1)
         XCTAssertEqual(mockPresenter.recordedInvocations.endDisplayingImage.first, viewModel.items.first!.imageUrl)
     }
-
 }
 
 extension ImageListViewControllerTests {

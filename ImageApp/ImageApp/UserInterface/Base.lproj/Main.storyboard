@@ -166,7 +166,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="J5v-OQ-L54"/>
                     </view>
-                    <navigationItem key="navigationItem" id="TQi-wu-Rp4"/>
+                    <navigationItem key="navigationItem" id="TQi-wu-Rp4">
+                        <barButtonItem key="rightBarButtonItem" title="Tags" id="LmQ-k0-0Za">
+                            <connections>
+                                <action selector="tagsButtonTapped" destination="5WP-TX-We9" id="H1r-aD-wRe"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="errorMessageLabel" destination="V0V-Jq-abP" id="CZW-gK-ddq"/>
                         <outlet property="errorView" destination="8UV-To-nAS" id="fMw-ef-4Ff"/>

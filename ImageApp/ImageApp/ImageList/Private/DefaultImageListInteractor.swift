@@ -18,12 +18,17 @@ extension DefaultImageListInteractor: ImageListInteractor {
 
     func fetchImageList() {
 
+        fetchImageList(with: "puppies")
+    }
+
+    func fetchImageList(with tags: String) {
+
         guard runningFetchDataFeedOperation == nil else {
 
             return
         }
 
-        runningFetchDataFeedOperation = FetchFlickrDataFeedOperation {
+        runningFetchDataFeedOperation = FetchFlickrDataFeedOperation(tags: tags) {
 
             (result) in
 

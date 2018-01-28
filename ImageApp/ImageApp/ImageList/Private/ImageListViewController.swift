@@ -20,6 +20,8 @@ class ImageListViewController: UIViewController {
 
         configurePullDownToRefresh()
 
+		configureTableView()
+
         presenter?.viewDidLoad()
     }
 }
@@ -31,6 +33,11 @@ extension ImageListViewController {
     @IBAction func retryButtonTapped() {
 
         presenter?.viewDidLoad()
+    }
+
+    @IBAction func tagsButtonTapped() {
+
+		presenter?.editTagsRequest()
     }
 }
 
@@ -99,6 +106,11 @@ extension ImageListViewController: UITableViewDelegate {
             return
         }
 
+		guard viewModel?.items.indices.contains(indexPath.row) == true else {
+
+			return
+		}
+
         guard let item = viewModel?.items[indexPath.row] else {
 
             return
@@ -134,6 +146,13 @@ extension ImageListViewController: ImageListView {
         self.title = title
 
         displayErrorView(errorMessage)
+    }
+
+    func presentAlert(with viewModel: EditTagsViewModel, animated: Bool) {
+
+        let alertViewController = makeAlertViewController(from: viewModel)
+
+        present(alertViewController, animated: animated)
     }
 }
 
@@ -173,6 +192,41 @@ extension ImageListViewController {
     }
 }
 
+// MARK: - Tags Helpers
+
+extension ImageListViewController {
+
+    private func makeAlertViewController(from viewModel: EditTagsViewModel) -> UIAlertController {
+
+        let alert = UIAlertController(title: viewModel.title, message: nil, preferredStyle: .alert)
+        alert.addTextField {
+
+            field in
+
+            field.placeholder = viewModel.textFieldPlaceHolder
+        }
+
+        let action = UIAlertAction(title: viewModel.buttonTitle, style: .default) {
+
+            action in
+
+            guard let textField = alert.textFields?.first,
+                  let tags = textField.text else {
+
+                return
+            }
+
+            viewModel.completion?(tags)
+        }
+        alert.addAction(action)
+
+        let cancelAction = UIAlertAction(title: viewModel.cancelButtonTitle, style: .cancel)
+        alert.addAction(cancelAction)
+
+        return alert
+    }
+}
+
 // MARK: - Pull Down To Refresh
 
 extension ImageListViewController {
@@ -189,5 +243,15 @@ extension ImageListViewController {
     @IBAction func pulledDownTriggered() {
 
         presenter?.refreshTable()
+    }
+}
+
+// MARK: - UITableView configuration
+
+extension ImageListViewController {
+
+    private func configureTableView() {
+
+        tableView.tableFooterView = UIView()
     }
 }

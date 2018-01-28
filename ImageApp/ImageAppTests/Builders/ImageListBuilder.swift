@@ -70,6 +70,66 @@ extension ImageListViewModel.Item {
     }
 }
 
+extension EditTagsViewModel {
+
+    struct Builder {
+
+        var title: String = "title"
+        var message: String = "message"
+        var textFieldPlaceHolder: String = "textFieldPlaceHolder"
+        var buttonTitle: String = "buttonTitle"
+        var cancelButtonTitle: String = "cancelButtonTitle"
+        var completion: ((String) -> Void)? = nil
+
+        func withTitle(_ title: String) -> Builder {
+            var builder = self
+            builder.title = title
+            return builder
+        }
+
+        func withMessage(_ message: String) -> Builder {
+            var builder = self
+            builder.message = message
+            return builder
+        }
+
+        func withTextFieldPlaceHolder(_ textFieldPlaceHolder: String) -> Builder {
+            var builder = self
+            builder.textFieldPlaceHolder = textFieldPlaceHolder
+            return builder
+        }
+
+        func withButtonTitle(_ buttonTitle: String) -> Builder {
+            var builder = self
+            builder.buttonTitle = buttonTitle
+            return builder
+        }
+
+        func withCancelButtonTitle(_ cancelButtonTitle: String) -> Builder {
+            var builder = self
+            builder.cancelButtonTitle = cancelButtonTitle
+            return builder
+        }
+
+        func withCompletion(_ completion: ((String) -> Void)?) -> Builder {
+            var builder = self
+            builder.completion = completion
+            return builder
+        }
+
+        func build() -> EditTagsViewModel {
+            return EditTagsViewModel(
+                title: self.title,
+                message: self.message,
+                textFieldPlaceHolder: self.textFieldPlaceHolder,
+                buttonTitle: self.buttonTitle,
+                cancelButtonTitle: self.cancelButtonTitle,
+                completion: self.completion)
+        }
+    }
+
+}
+
 // MARK: - DataFeed
 
 extension DataFeed {

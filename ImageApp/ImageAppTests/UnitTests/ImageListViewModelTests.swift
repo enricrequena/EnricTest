@@ -73,4 +73,64 @@ class ImageListViewModelTests: XCTestCase {
             .build()
         XCTAssertNotEqual(a, b)
     }
+
+    // MARK: - Equatable EditTagsViewModel
+
+    func testEditTagsViewModel_Equal() {
+
+        let a = EditTagsViewModel.Builder().build()
+        let b = EditTagsViewModel.Builder().build()
+        XCTAssertEqual(a, b)
+    }
+
+    func testEditTagsViewModel_DifferentTitle() {
+
+        let a = EditTagsViewModel.Builder()
+            .withTitle("dks")
+            .build()
+        let b = EditTagsViewModel.Builder()
+            .withTitle("ds")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+    func testEditTagsViewModel_DifferentMessage() {
+
+        let a = EditTagsViewModel.Builder()
+            .withMessage("a")
+            .build()
+        let b = EditTagsViewModel.Builder()
+            .withMessage("b")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+    func testEditTagsViewModel_DifferentPlaceholderTextField() {
+
+        let a = EditTagsViewModel.Builder()
+            .withTextFieldPlaceHolder("a")
+            .build()
+        let b = EditTagsViewModel.Builder()
+            .withTextFieldPlaceHolder("b")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+    func testEditTagsViewModel_DifferentButtonTitle() {
+
+        let a = EditTagsViewModel.Builder()
+            .withButtonTitle("a")
+            .build()
+        let b = EditTagsViewModel.Builder()
+            .withButtonTitle("b")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+    func testEditTagsViewModel_DifferentCancelButtonTitle() {
+
+        let a = EditTagsViewModel.Builder()
+            .withCancelButtonTitle("52")
+            .build()
+        let b = EditTagsViewModel.Builder()
+            .withCancelButtonTitle("52a")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
 }

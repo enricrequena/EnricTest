@@ -13,6 +13,7 @@ class MockImageListPresenter {
         var refreshTable = 0
         var willDisplayImage = [(url: URL, completion: (UIImage) -> Void)]()
         var endDisplayingImage = [URL]()
+        var editTagsRequest = 0
     }
     var recordedInvocations = Invocations()
 
@@ -42,5 +43,10 @@ extension MockImageListPresenter: ImageListPresenter {
     func endDisplayingImage(from url: URL) {
 
         recordedInvocations.endDisplayingImage.append(url)
+    }
+
+    func editTagsRequest() {
+
+        recordedInvocations.editTagsRequest += 1
     }
 }

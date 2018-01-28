@@ -7,6 +7,7 @@ import UIKit
 protocol ImageListInteractor: class {
 
     func fetchImageList()
+    func fetchImageList(with tags: String)
     func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void)
     func cancelImage(from url: URL)
 

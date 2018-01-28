@@ -65,7 +65,7 @@ class DefaultImageListPresenterTests: XCTestCase {
         XCTAssertEqual(mockView.recordedInvocations.loading.first?.message, Strings.ImageListView.messageForLoading)
     }
 
-    func refreshTable() {
+    func testRefreshTable() {
 
         presenter.refreshTable()
 
@@ -87,7 +87,7 @@ class DefaultImageListPresenterTests: XCTestCase {
         XCTAssertEqual(mockInteractor.recordedInvocations.loadImage.count, 1)
         XCTAssertEqual(mockInteractor.recordedInvocations.loadImage.first?.url, url)
 
-        let expectedImage = #imageLiteral(resourceName: "options-icon")
+        let expectedImage = #imageLiteral(resourceName: "tag-image")
         mockInteractor.recordedInvocations.loadImage.first?.completion(expectedImage)
 
         XCTAssert(expectedImage === recordedImage)
@@ -100,6 +100,34 @@ class DefaultImageListPresenterTests: XCTestCase {
         presenter.endDisplayingImage(from: url)
 
         XCTAssertEqual(mockInteractor.recordedInvocations.cancelImage, [url])
+    }
+
+    func testEditTagsRequest() {
+
+        let expectedEditTagsViewModel = EditTagsViewModel.Builder()
+            .withTitle(Strings.ImageListView.EditTag.alertTitle)
+            .withMessage(Strings.ImageListView.EditTag.alertMessage)
+            .withTextFieldPlaceHolder(Strings.ImageListView.EditTag.textFieldPlaceHolder)
+            .withButtonTitle(Strings.ImageListView.EditTag.buttonTitle)
+            .withCancelButtonTitle(Strings.ImageListView.EditTag.cancelButtonTitle)
+            .build()
+
+        presenter.editTagsRequest()
+
+        XCTAssertEqual(mockView.recordedInvocations.presentAlert.count, 1)
+		XCTAssertEqual(mockView.recordedInvocations.presentAlert.first?.viewModel, expectedEditTagsViewModel)
+        XCTAssertEqual(mockView.recordedInvocations.presentAlert.first?.animated, true)
+
+        guard let completionBlock = mockView.recordedInvocations.presentAlert.first?.viewModel.completion else {
+
+            XCTFail("Completion block not setup")
+            return
+        }
+
+        let expectedNewTag = "expected new tag"
+        completionBlock(expectedNewTag)
+
+        XCTAssertEqual(mockInteractor.recordedInvocations.fetchImageListWithTags, [expectedNewTag])
     }
 
     // MARK: - ImageListInteractorOutput

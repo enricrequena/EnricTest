@@ -10,4 +10,5 @@ protocol ImageListPresenter: class {
     func refreshTable()
     func willDisplayImage(from url: URL, with completion: @escaping (UIImage) -> Void)
     func endDisplayingImage(from url: URL)
+    func editTagsRequest()
 }
