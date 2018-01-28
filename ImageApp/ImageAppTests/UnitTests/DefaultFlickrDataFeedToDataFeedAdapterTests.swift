@@ -23,9 +23,36 @@ class DefaultFlickrDataFeedToDataFeedAdapterTests: XCTestCase {
 
     // MARK: - FlickrDataFeedToDataFeedAdapter
 
-    func testConvert() {
+    func testConvert_ValidExample() {
 
-        let example = makeExample()
+        let example = makeValidExample()
+
+        let dataFeed = adapter.convert(flickrDataFeed: example.flickrDataFeed)
+
+        XCTAssertEqual(dataFeed, example.expectedDataFeed)
+    }
+
+    func testConvert_InvalidExample_WrongLink() {
+
+        let example = makeInvalidExample_WrongLink()
+
+        let dataFeed = adapter.convert(flickrDataFeed: example.flickrDataFeed)
+
+        XCTAssertEqual(dataFeed, example.expectedDataFeed)
+    }
+
+    func testConvert_InvalidExample_WrongDate() {
+
+        let example = makeInvalidExample_WrongDate()
+
+        let dataFeed = adapter.convert(flickrDataFeed: example.flickrDataFeed)
+
+        XCTAssertEqual(dataFeed, example.expectedDataFeed)
+    }
+
+    func testConvert_InvalidExample_WrongImageURL() {
+
+        let example = makeInvalidExample_WrongImageURL()
 
         let dataFeed = adapter.convert(flickrDataFeed: example.flickrDataFeed)
 
@@ -37,7 +64,7 @@ class DefaultFlickrDataFeedToDataFeedAdapterTests: XCTestCase {
 
 extension DefaultFlickrDataFeedToDataFeedAdapterTests {
 
-    private func makeExample() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
+    private func makeValidExample() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
 
         let flickrDataFeed = makeFlickrDataFeed()
 
@@ -110,4 +137,84 @@ extension DefaultFlickrDataFeedToDataFeedAdapterTests {
 
         return dataFeed
     }
+
+    private func makeExpectedDataFeed_WithNoItems(from flickrDataFeed: FlickrDataFeed) -> DataFeed {
+
+        let dataFeed = DataFeed.Builder()
+            .withFeedTitle(flickrDataFeed.title)
+            .withItems([])
+            .build()
+
+        return dataFeed
+    }
+
+    private func makeInvalidExample_WrongLink() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
+
+        let dateItem1String = ISO8601DateFormatter().string(from: Date())
+        let item1 = FlickrDataFeed.Item.Builder()
+            .withTitle("Item 1 title")
+            .withPublished(dateItem1String)
+            .withLink("")
+            .withMedia(
+                FlickrDataFeed.Item.Media.Builder()
+                    .withM("https://www.flickr.com/1")
+                    .build()
+            )
+            .build()
+
+        let flickrDataFeed = FlickrDataFeed.Builder()
+            .withTitle("This is a title different")
+            .withItems([item1])
+            .build()
+
+        let expectedDataFeed = makeExpectedDataFeed_WithNoItems(from: flickrDataFeed)
+        return (flickrDataFeed, expectedDataFeed)
+    }
+
+    private func makeInvalidExample_WrongImageURL() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
+
+        let dateItem1String = ISO8601DateFormatter().string(from: Date())
+        let item1 = FlickrDataFeed.Item.Builder()
+            .withTitle("Item 1 title")
+            .withPublished(dateItem1String)
+            .withLink("https://www.flickr.com/1")
+            .withMedia(
+                FlickrDataFeed.Item.Media.Builder()
+                    .withM("")
+                    .build()
+            )
+            .build()
+
+        let flickrDataFeed = FlickrDataFeed.Builder()
+            .withTitle("This is a ti")
+            .withItems([item1])
+            .build()
+
+        let expectedDataFeed = makeExpectedDataFeed_WithNoItems(from: flickrDataFeed)
+        return (flickrDataFeed, expectedDataFeed)
+    }
+
+    private func makeInvalidExample_WrongDate() -> (flickrDataFeed: FlickrDataFeed, expectedDataFeed: DataFeed) {
+
+        let item1 = FlickrDataFeed.Item.Builder()
+            .withTitle("Item 1 title")
+            .withPublished("55")
+            .withLink("https://www.flickr.com/1")
+            .withMedia(
+                FlickrDataFeed.Item.Media.Builder()
+                    .withM("")
+                    .build()
+            )
+            .build()
+
+        let flickrDataFeed = FlickrDataFeed.Builder()
+            .withTitle("This is a title 532")
+            .withItems([item1])
+            .build()
+
+        let expectedDataFeed = makeExpectedDataFeed_WithNoItems(from: flickrDataFeed)
+        return (flickrDataFeed, expectedDataFeed)
+
+    }
+
 }

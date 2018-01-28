@@ -4,17 +4,17 @@
 
 import UIKit
 
-
-@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+    var appConfiguration: AppConfiguration = DefaultAppConfiguration()
 
-    var imageListWireframeFactory: ImageListWireframeFactory = DefaultImageListWireframeFactory()
+    var window: UIWindow?
 
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+        appConfiguration.configure()
 
         configureInitialModule()
 
@@ -55,6 +55,8 @@ extension AppDelegate {
 
             return nil
         }
+
+		let imageListWireframeFactory = ServiceDirectory.ImageList.factory!
 
         return imageListWireframeFactory.makeWireframe(with: imageViewViewController)
     }

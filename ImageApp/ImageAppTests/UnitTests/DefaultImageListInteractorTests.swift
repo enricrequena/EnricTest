@@ -9,13 +9,15 @@ class DefaultImageListInteractorTests: XCTestCase {
 
     var interactor: DefaultImageListInteractor!
     var mockImageListInteractorOutput: MockImageListInteractorOutput!
+	var mockImageCache: MockImageCache!
 
     override func setUp() {
 
         super.setUp()
 
         mockImageListInteractorOutput = MockImageListInteractorOutput()
-        interactor = DefaultImageListInteractor()
+		mockImageCache = MockImageCache()
+		interactor = DefaultImageListInteractor(imageCache: mockImageCache)
         interactor.output = mockImageListInteractorOutput
     }
 
@@ -23,8 +25,12 @@ class DefaultImageListInteractorTests: XCTestCase {
 
         interactor = nil
         mockImageListInteractorOutput = nil
+		mockImageCache = nil
         super.tearDown()
     }
 
-    // NOTE: fetchImageList method tested through integration tests
+	func testInit() {
+
+        XCTAssert(interactor.imageCache === mockImageCache)
+    }
 }

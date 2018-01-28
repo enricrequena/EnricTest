@@ -7,11 +7,18 @@ import UIKit
 class DefaultImageListInteractor {
 
     weak var output: ImageListInteractorOutput?
+    let imageCache: ImageCache
 
     private let operationQueue = OperationQueue()
 
     private var runningFetchDataFeedOperation: FetchFlickrDataFeedOperation? = nil
     private var runningOperations: [URL: Operation] = [:]
+
+
+    init(imageCache: ImageCache) {
+
+        self.imageCache = imageCache
+    }
 }
 
 extension DefaultImageListInteractor: ImageListInteractor {
@@ -45,6 +52,14 @@ extension DefaultImageListInteractor: ImageListInteractor {
 
     func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void) {
 
+        let cachedImage = imageCache.findImage(for: url)
+
+        guard cachedImage == nil else {
+
+            completion(cachedImage!)
+            return
+        }
+
         guard !operationAlreadyRunning(for: url) else {
 
             return
@@ -54,7 +69,13 @@ extension DefaultImageListInteractor: ImageListInteractor {
 
             [weak self] image in
 
-            self?.releaseOperation(at: url)
+            guard let strongSelf = self else {
+
+                return
+            }
+
+            strongSelf.releaseOperation(at: url)
+            strongSelf.imageCache.cache(image: image, at: url)
 
             completion(image)
 

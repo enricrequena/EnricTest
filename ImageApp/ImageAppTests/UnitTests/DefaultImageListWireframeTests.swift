@@ -9,19 +9,22 @@ class DefaultImageListWireframeTests: XCTestCase {
 
     var wireframe: DefaultImageListWireframe!
     var imageListViewController: ImageListViewController!
+    var mockImageCache: MockImageCache!
 
     override func setUp() {
 
         super.setUp()
 
         imageListViewController = ImageListViewController()
-        wireframe = DefaultImageListWireframe(viewController: imageListViewController)
+        mockImageCache = MockImageCache()
+        wireframe = DefaultImageListWireframe(viewController: imageListViewController, imageCache: mockImageCache)
     }
 
     override func tearDown() {
 
         wireframe = nil
         imageListViewController = nil
+        mockImageCache = nil
         super.tearDown()
     }
 
@@ -44,5 +47,6 @@ class DefaultImageListWireframeTests: XCTestCase {
         XCTAssert(presenter.view === imageListViewController)
         XCTAssert(presenter.wireframe === wireframe)
         XCTAssert(interactor.output === presenter)
+        XCTAssert(interactor.imageCache === mockImageCache)
     }
 }

@@ -8,30 +8,32 @@ import XCTest
 class AppDelegateTests: XCTestCase {
 
     var appDelegate: AppDelegate!
-    
+    var mockAppConfiguration: MockAppConfiguration!
+
     override func setUp() {
 
         super.setUp()
 
+        mockAppConfiguration = MockAppConfiguration()
         appDelegate = AppDelegate()
+        appDelegate.appConfiguration = mockAppConfiguration
     }
     
     override func tearDown() {
 
-        super.tearDown()
-
         appDelegate = nil
-    }
+        mockAppConfiguration = nil
 
-    func testImageListWireframeFactory() {
-
-        XCTAssertTrue(appDelegate.imageListWireframeFactory is DefaultImageListWireframeFactory)
+        super.tearDown()
     }
 
     func testApplicationDidFinishLaunchingWithOptions() {
 
-        let mockImageListWireframeFactory = MockImageListWireframeFactory()
-        appDelegate.imageListWireframeFactory = mockImageListWireframeFactory
+        guard let mockImageListWireframeFactory = ServiceDirectory.ImageList.factory as? MockImageListWireframeFactory else {
+
+            XCTFail("MockImageListWireframeFactory not configured")
+            return
+        }
 
         let application = UIApplication.shared
         let options: [UIApplicationLaunchOptionsKey: Any]? = nil
@@ -50,5 +52,6 @@ class AppDelegateTests: XCTestCase {
         XCTAssertEqual(mockImageListWireframeFactory.recordedInvocations.makeWireframe.count, 1)
         XCTAssert(mockImageListWireframeFactory.recordedInvocations.makeWireframe.first! === imageViewController)
         XCTAssertEqual(mockImageListWireframeFactory.returnValues.makeWireframe.recordedInvocations.present, 1)
+        XCTAssertEqual(mockAppConfiguration.recordedInvocations.configure, 1)
     }
 }
