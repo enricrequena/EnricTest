@@ -2,6 +2,8 @@
 // Copyright (c) 2018 ERT Limited. All rights reserved.
 //
 
+import UIKit
+
 class DefaultImageListWireframe {
 
     let viewController: ImageListViewController
@@ -24,6 +26,11 @@ extension DefaultImageListWireframe: ImageListWireframe {
 
         wireUpModule()
     }
+
+    func navigateToShare(with image: UIImage) {
+
+        presentShare(with: image)
+    }
 }
 
 // MARK: - Helper methods
@@ -44,5 +51,16 @@ extension DefaultImageListWireframe {
         interactor.output = presenter
 
         viewController.presenter = presenter
+    }
+
+    private func presentShare(with image: UIImage) {
+
+        let shareWireframe = DefaultShareWireframe(viewController: viewController)
+
+        let shareImageActivityItemSource = ShareImageActivityItemSource(image: image)
+
+        let context = ShareContext(activityItems: [shareImageActivityItemSource])
+
+        shareWireframe.presentActivityController(context: context, animated: true)
     }
 }

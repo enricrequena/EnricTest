@@ -14,6 +14,7 @@ enum Action {
 
     case saveToLibrary(buttonTitle: String, item: ImageListViewModel.Item, action: (UIImage) -> Void)
 	case openImageInBrowser(buttonTitle: String, item: ImageListViewModel.Item, action: (URL) -> Void)
+	case shareImage(buttonTitle: String, item: ImageListViewModel.Item, action: (UIImage) -> Void)
     case cancel(buttonTitle: String)
 }
 
@@ -23,6 +24,8 @@ extension Action: Equatable {
         case let (.saveToLibrary(buttonTitle:l0, item:l1, _), .saveToLibrary(buttonTitle:r0, item:r1, _)):
             return l0 == r0 && l1 == r1
         case let (.openImageInBrowser(buttonTitle:l0, item:l1, _), .openImageInBrowser(buttonTitle:r0, item:r1, _)):
+            return l0 == r0 && l1 == r1
+        case let (.shareImage(buttonTitle:l0, item:l1, _), .shareImage(buttonTitle:r0, item:r1, _)):
             return l0 == r0 && l1 == r1
         case let (.cancel(buttonTitle:l0), .cancel(buttonTitle:r0)):
             return l0 == r0
@@ -174,11 +177,13 @@ extension DefaultImageListPresenter {
 
         let saveToLibraryAction = makeSaveToLibraryAction(for: item)
         let openImageInBrowserAction = makeOpenImageInBrowserAction(for: item)
+        let shareImageAction = makeShareImageAction(for: item)
         let cancelAction = makeCancelAction()
 
         let actions: [Action] = [
             saveToLibraryAction,
             openImageInBrowserAction,
+            shareImageAction,
             cancelAction
         ]
 
@@ -238,6 +243,22 @@ extension DefaultImageListPresenter {
 
         let openImageInBrowserTitle = Strings.ImageListView.Action.openImageInBrowserButtonTitle
         return .openImageInBrowser(buttonTitle: openImageInBrowserTitle, item: item, action: openImageInSafari)
+    }
+
+    private func makeShareImageAction(for item: ImageListViewModel.Item) -> Action {
+
+        let shareImageButtonTitle = Strings.ImageListView.Action.shareImageButtonTitle
+        let shareImageAction: (UIImage) -> Void = {
+
+            [weak self] image in
+
+            guard let strongSelf = self else {
+
+                return
+            }
+            strongSelf.wireframe.navigateToShare(with: image)
+        }
+        return .shareImage(buttonTitle: shareImageButtonTitle, item: item, action: shareImageAction)
     }
 
     private func makeCancelAction() -> Action {

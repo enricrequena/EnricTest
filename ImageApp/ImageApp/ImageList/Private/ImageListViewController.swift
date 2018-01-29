@@ -272,13 +272,26 @@ extension ImageListViewController {
 
                 case let .saveToLibrary(buttonTitle, item, actionOnCompletion):
 
-                    let alertAction = makeDefaultSaveToLibraryAlertAction(with: buttonTitle, item: item, and: actionOnCompletion)
+                    let alertAction = makeDefaultAlertActionWithImageCompletionBlock(
+                        with: buttonTitle,
+                        item: item,
+                        and: actionOnCompletion
+					)
                     alert.addAction(alertAction)
 
 				case let .openImageInBrowser(buttonTitle, item, action):
 
                     let alertAction = makeDefaultOpenInSafariAlertAction(with: buttonTitle, item: item, and: action)
 					alert.addAction(alertAction)
+
+                case let .shareImage(buttonTitle, item, actionOnCompletion):
+
+                    let alertAction = makeDefaultAlertActionWithImageCompletionBlock(
+                        with: buttonTitle,
+                        item: item,
+                        and: actionOnCompletion
+					)
+                    alert.addAction(alertAction)
 
                 case let .cancel(buttonTitle):
 
@@ -290,7 +303,7 @@ extension ImageListViewController {
         return alert
     }
 
-    private func makeDefaultSaveToLibraryAlertAction(
+    private func makeDefaultAlertActionWithImageCompletionBlock(
         with title: String,
         item: ImageListViewModel.Item,
 		and actionCompletion: @escaping ((UIImage) -> Void)) -> UIAlertAction {
@@ -331,7 +344,6 @@ extension ImageListViewController {
 
         return action
     }
-
 
     private func makeCancelAlertAction(with title: String) -> UIAlertAction {
 
