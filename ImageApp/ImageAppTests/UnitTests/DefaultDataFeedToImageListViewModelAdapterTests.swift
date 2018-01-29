@@ -26,12 +26,24 @@ class DefaultDataFeedToImageListViewModelAdapterTests: XCTestCase {
     func testConvertDataFeed() {
 
 		let sortType = SortByType.datePublished
+        var itemActionExecutedWithItem: ImageListViewModel.Item? = nil
+        let itemAction: (ImageListViewModel.Item) -> Void = {
+            item in
+            itemActionExecutedWithItem = item
+        }
 
 		let example = makeExample(sortType: sortType)
 
-		let imageListViewModel = adapter.convert(dataFeed: example.dataFeed, sortedBy: sortType)
+		let imageListViewModel = adapter.convert(dataFeed: example.dataFeed, sortedBy: sortType, itemAction: itemAction)
 
         XCTAssertEqual(imageListViewModel, example.expectedImageListViewModel)
+
+        imageListViewModel.items.forEach {
+            item in
+
+            item.itemAction?(item)
+            XCTAssertEqual(item, itemActionExecutedWithItem)
+        }
     }
 
 	func testConvertError_NetworkError() {

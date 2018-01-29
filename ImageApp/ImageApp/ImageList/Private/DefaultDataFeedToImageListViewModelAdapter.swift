@@ -10,7 +10,10 @@ class DefaultDataFeedToImageListViewModelAdapter {
 
 extension DefaultDataFeedToImageListViewModelAdapter: DataFeedToImageListViewModelAdapter {
 
-    func convert(dataFeed: DataFeed, sortedBy: SortByType) -> ImageListViewModel {
+    func convert(
+        dataFeed: DataFeed,
+        sortedBy: SortByType,
+		itemAction: @escaping (ImageListViewModel.Item) -> Void) -> ImageListViewModel {
 
         let title = dataFeed.feedTitle
 
@@ -18,7 +21,7 @@ extension DefaultDataFeedToImageListViewModelAdapter: DataFeedToImageListViewMod
 
         let items = dataFeedItemsSorted.flatMap {
 
-            makeItem(from: $0, for: sortedBy)
+            makeItem(from: $0, for: sortedBy, with: itemAction)
         }
 
         return ImageListViewModel(title: title, items: items)
@@ -50,9 +53,9 @@ extension DefaultDataFeedToImageListViewModelAdapter: DataFeedToImageListViewMod
 
         switch networkError {
 
-            case let .failedToLoadData(message):
+        case let .failedToLoadData(message):
 
-                return "\(Strings.Error.errorOcurred):\n\(message)"
+            return "\(Strings.Error.errorOcurred):\n\(message)"
         }
     }
 }
@@ -61,16 +64,20 @@ extension DefaultDataFeedToImageListViewModelAdapter: DataFeedToImageListViewMod
 
 extension DefaultDataFeedToImageListViewModelAdapter {
 
-    private func makeItem(from item: DataFeed.Item, for sortType: SortByType) -> ImageListViewModel.Item {
+    private func makeItem(
+        from item: DataFeed.Item,
+        for sortType: SortByType,
+		with itemAction: @escaping (ImageListViewModel.Item) -> Void) -> ImageListViewModel.Item {
 
         let name = item.title
-		let dateInfo = makeFormattedDate(from: item.published, for: sortType)
+        let dateInfo = makeFormattedDate(from: item.published, for: sortType)
         let imageUrl = item.imageURL
 
         let item = ImageListViewModel.Item(
             name: name,
             dateInfo: dateInfo,
-            imageUrl: imageUrl
+            imageUrl: imageUrl,
+            itemAction: itemAction
         )
 
         return item
@@ -81,21 +88,21 @@ extension DefaultDataFeedToImageListViewModelAdapter {
         let dateFormatter = ISO8601DateFormatter()
 
         dateFormatter.formatOptions = .withFullDate
-		let dateString = dateFormatter.string(from: published)
+        let dateString = dateFormatter.string(from: published)
 
-		dateFormatter.formatOptions = .withFullTime
-		let timeString = dateFormatter.string(from: published).dropLast()
+        dateFormatter.formatOptions = .withFullTime
+        let timeString = dateFormatter.string(from: published).dropLast()
 
         let prefix: String
         switch sortType {
 
-            case .dateTaken:
+        case .dateTaken:
 
-                prefix = Strings.ImageListView.dateCreated
+            prefix = Strings.ImageListView.dateCreated
 
-            case .datePublished:
+        case .datePublished:
 
-                prefix = Strings.ImageListView.datePublished
+            prefix = Strings.ImageListView.datePublished
 
         }
         return "\(prefix): \(dateString) \(timeString)"

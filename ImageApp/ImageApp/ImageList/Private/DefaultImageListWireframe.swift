@@ -6,11 +6,13 @@ class DefaultImageListWireframe {
 
     let viewController: ImageListViewController
     let imageCache: ImageCache
+    let imageLibrary: ImageLibrary
 
-    init(viewController: ImageListViewController, imageCache: ImageCache) {
+    init(viewController: ImageListViewController, imageCache: ImageCache, imageLibrary: ImageLibrary) {
 
         self.viewController = viewController
         self.imageCache = imageCache
+        self.imageLibrary = imageLibrary
     }
 }
 
@@ -31,7 +33,7 @@ extension DefaultImageListWireframe {
     private func wireUpModule() {
 
         let adapter = DefaultDataFeedToImageListViewModelAdapter()
-        let interactor = DefaultImageListInteractor(imageCache: imageCache)
+        let interactor = DefaultImageListInteractor(imageCache: imageCache, imageLibrary: imageLibrary)
 
         let presenter = DefaultImageListPresenter(
             interactor: interactor,

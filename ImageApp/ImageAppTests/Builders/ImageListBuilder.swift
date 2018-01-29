@@ -42,6 +42,7 @@ extension ImageListViewModel.Item {
         var name: String = "name"
         var dateInfo: String = "dateInfo"
         var imageUrl: URL = URL(string: "https://www.flickr.com")!
+        var itemAction: ((ImageListViewModel.Item) -> Void)? = nil
 
         func withName(_ name: String) -> Builder {
             var builder = self
@@ -61,11 +62,19 @@ extension ImageListViewModel.Item {
             return builder
         }
 
+        func withItemAction(_ itemAction: ((ImageListViewModel.Item) -> Void)?) -> Builder {
+            var builder = self
+            builder.itemAction = itemAction
+            return builder
+        }
+
         func build() -> ImageListViewModel.Item {
             return ImageListViewModel.Item(
                 name: self.name,
                 dateInfo: self.dateInfo,
-                imageUrl: self.imageUrl)
+                imageUrl: self.imageUrl,
+                itemAction: self.itemAction
+            )
         }
     }
 }
@@ -125,6 +134,41 @@ extension EditTagsViewModel {
                 buttonTitle: self.buttonTitle,
                 cancelButtonTitle: self.cancelButtonTitle,
                 completion: self.completion)
+        }
+    }
+}
+
+extension ActionsViewModel {
+
+    struct Builder {
+
+        var title: String = "title"
+        var message: String = "message"
+        var actions: [Action] = []
+
+        func withTitle(_ title: String) -> Builder {
+            var builder = self
+            builder.title = title
+            return builder
+        }
+
+        func withMessage(_ message: String) -> Builder {
+            var builder = self
+            builder.message = message
+            return builder
+        }
+
+        func withActions(_ actions: [Action]) -> Builder {
+            var builder = self
+            builder.actions = actions
+            return builder
+        }
+
+        func build() -> ActionsViewModel {
+            return ActionsViewModel(
+                title: self.title,
+                message: self.message,
+                actions: self.actions)
         }
     }
 

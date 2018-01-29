@@ -13,6 +13,7 @@ class MockImageListInteractor {
         var fetchImageListWithTags = [String]()
         var loadImage = [(url: URL, completion: ((UIImage) -> Void))]()
         var cancelImage = [URL]()
+		var save = [(image: UIImage, completion: ((Error?) -> Void)?)]()
     }
     var recordedInvocations = Invocations()
 }
@@ -37,5 +38,10 @@ extension MockImageListInteractor: ImageListInteractor {
     func cancelImage(from url: URL) {
 
         recordedInvocations.cancelImage.append(url)
+    }
+
+    func saveToLibrary(_ image: UIImage, completion: ((Error?) -> Void)?) {
+
+        recordedInvocations.save.append((image, completion))
     }
 }

@@ -17,7 +17,11 @@ class IntegrationTests: XCTestCase {
             expectation.fulfill()
         }
 		let mockImageCache = MockImageCache()
-		let interactor = DefaultImageListInteractor(imageCache: mockImageCache)
+        let mockImageLibrary = MockImageLibrary()
+		let interactor = DefaultImageListInteractor(
+            imageCache: mockImageCache,
+            imageLibrary: mockImageLibrary
+        )
         interactor.output = mockOutput
 
         interactor.fetchImageList()

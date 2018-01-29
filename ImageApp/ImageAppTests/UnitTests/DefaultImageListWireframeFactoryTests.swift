@@ -9,20 +9,31 @@ class DefaultImageListWireframeFactoryTests: XCTestCase {
 
     var factory: DefaultImageListWireframeFactory!
     var mockImageCache: MockImageCache!
+    var mockImageLibrary: MockImageLibrary!
 
     override func setUp() {
 
         super.setUp()
         mockImageCache = MockImageCache()
-        factory = DefaultImageListWireframeFactory(imageCache: mockImageCache)
+        mockImageLibrary = MockImageLibrary()
+        factory = DefaultImageListWireframeFactory(imageCache: mockImageCache, imageLibrary: mockImageLibrary)
     }
 
     override func tearDown() {
 
         factory = nil
         mockImageCache = nil
+        mockImageLibrary = nil
         super.tearDown()
     }
+
+	// MARK: - init
+
+	func testInit() {
+
+		XCTAssert(factory.imageCache === mockImageCache)
+		XCTAssert(factory.imageLibrary === mockImageLibrary)
+	}
 
     // MARK: - makeWireframe
 
@@ -40,5 +51,6 @@ class DefaultImageListWireframeFactoryTests: XCTestCase {
 
         XCTAssert(defaultWireframe.viewController === viewController)
         XCTAssert(defaultWireframe.imageCache === mockImageCache)
+        XCTAssert(defaultWireframe.imageLibrary === mockImageLibrary)
     }
 }

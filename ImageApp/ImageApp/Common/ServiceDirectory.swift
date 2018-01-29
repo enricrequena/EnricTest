@@ -7,6 +7,7 @@ class ServiceDirectory {
     enum Common {
 
         static var imageCache: ImageCache!
+        static var imageLibrary: ImageLibrary!
     }
 
     enum ImageList {

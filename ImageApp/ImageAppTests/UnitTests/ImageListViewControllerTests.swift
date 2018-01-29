@@ -262,6 +262,17 @@ class ImageListViewControllerTests: XCTestCase {
         // through UnitTests. UIKit components often are not straight forward to test.
     }
 
+    func testPresentActions() {
+
+        // As for PresentAlert, we will write a UI test for this method.
+    }
+
+    func testPresentToast() {
+
+        // This method is not straight foward to test either. Toast-Swift uses UIView extensions to add a toast view
+        // to the main view.
+    }
+
     // MARK: - UIStoryboard
 
     func testStoryboard() {

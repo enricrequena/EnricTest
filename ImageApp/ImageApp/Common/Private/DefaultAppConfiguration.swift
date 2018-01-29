@@ -7,14 +7,17 @@ class DefaultAppConfiguration: AppConfiguration {
     func configureCommon() {
 
         ServiceDirectory.Common.imageCache = MemoryImageCache()
+        ServiceDirectory.Common.imageLibrary = SystemGalleryImageLibrary()
     }
 
     func configureImageList() {
 
         let imageCache = ServiceDirectory.Common.imageCache!
+        let imageLibrary = ServiceDirectory.Common.imageLibrary!
 
         ServiceDirectory.ImageList.factory = DefaultImageListWireframeFactory(
-            imageCache: imageCache
+            imageCache: imageCache,
+            imageLibrary: imageLibrary
         )
     }
 }

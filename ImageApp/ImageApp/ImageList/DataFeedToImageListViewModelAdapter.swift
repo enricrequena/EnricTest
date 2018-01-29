@@ -4,6 +4,9 @@
 
 protocol DataFeedToImageListViewModelAdapter: class {
 
-    func convert(dataFeed: DataFeed, sortedBy: SortByType) -> ImageListViewModel
+    func convert(
+        dataFeed: DataFeed,
+        sortedBy: SortByType,
+        itemAction: @escaping (ImageListViewModel.Item) -> Void) -> ImageListViewModel
     func convert(error: Error) -> String
 }

@@ -4,6 +4,8 @@
 
 @testable import ImageApp
 
+import UIKit
+
 class MockImageListView {
 
     struct Invocations {
@@ -12,6 +14,8 @@ class MockImageListView {
         var update = [ImageListViewModel]()
         var updateFailed = [(title: String, errorMessage: String)]()
         var presentAlert = [(viewModel: EditTagsViewModel, animated: Bool)]()
+        var presentActions = [(viewModel: ActionsViewModel, animated: Bool)]()
+        var presentToast = [(message: String, color: UIColor)]()
     }
     var recordedInvocations = Invocations()
 
@@ -41,5 +45,15 @@ extension MockImageListView: ImageListView {
     func presentAlert(with viewModel: EditTagsViewModel, animated: Bool) {
 
         recordedInvocations.presentAlert.append((viewModel, animated))
+    }
+
+    func presentActions(with viewModel: ActionsViewModel, animated: Bool) {
+
+        recordedInvocations.presentActions.append((viewModel, animated))
+    }
+
+    func presentToast(with message: String, and color: UIColor) {
+
+        recordedInvocations.presentToast.append((message, color))
     }
 }

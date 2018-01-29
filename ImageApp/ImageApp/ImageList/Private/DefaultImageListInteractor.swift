@@ -8,6 +8,7 @@ class DefaultImageListInteractor {
 
     weak var output: ImageListInteractorOutput?
     let imageCache: ImageCache
+    let imageLibrary: ImageLibrary
 
     private let operationQueue = OperationQueue()
 
@@ -15,9 +16,10 @@ class DefaultImageListInteractor {
     private var runningOperations: [URL: Operation] = [:]
 
 
-    init(imageCache: ImageCache) {
+    init(imageCache: ImageCache, imageLibrary: ImageLibrary) {
 
         self.imageCache = imageCache
+        self.imageLibrary = imageLibrary
     }
 }
 
@@ -50,7 +52,7 @@ extension DefaultImageListInteractor: ImageListInteractor {
         operationQueue.addOperation(runningFetchDataFeedOperation!)
     }
 
-    func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void) {
+	func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void) {
 
         let cachedImage = imageCache.findImage(for: url)
 
@@ -59,6 +61,26 @@ extension DefaultImageListInteractor: ImageListInteractor {
             completion(cachedImage!)
             return
         }
+
+        fetchImage(with: url, and: completion)
+    }
+
+    func cancelImage(from url: URL) {
+
+        cancelOperation(at: url)
+    }
+
+    func saveToLibrary(_ image: UIImage, completion: ((Error?) -> Void)?) {
+
+        imageLibrary.save(image: image, completion: completion)
+    }
+}
+
+// MARK: - Image Fetching
+
+extension DefaultImageListInteractor {
+
+    private func fetchImage(with url: URL, and completion: @escaping (UIImage) -> Void) {
 
         guard !operationAlreadyRunning(for: url) else {
 
@@ -85,12 +107,9 @@ extension DefaultImageListInteractor: ImageListInteractor {
 
         operationQueue.addOperation(downloadImageOperation)
     }
-
-    func cancelImage(from url: URL) {
-
-        cancelOperation(at: url)
-    }
 }
+
+// MARK: - Operation Management
 
 extension DefaultImageListInteractor {
 

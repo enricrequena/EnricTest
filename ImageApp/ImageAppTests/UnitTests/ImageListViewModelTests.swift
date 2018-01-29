@@ -93,6 +93,7 @@ class ImageListViewModelTests: XCTestCase {
             .build()
         XCTAssertNotEqual(a, b)
     }
+
     func testEditTagsViewModel_DifferentMessage() {
 
         let a = EditTagsViewModel.Builder()
@@ -103,6 +104,7 @@ class ImageListViewModelTests: XCTestCase {
             .build()
         XCTAssertNotEqual(a, b)
     }
+
     func testEditTagsViewModel_DifferentPlaceholderTextField() {
 
         let a = EditTagsViewModel.Builder()
@@ -113,6 +115,7 @@ class ImageListViewModelTests: XCTestCase {
             .build()
         XCTAssertNotEqual(a, b)
     }
+
     func testEditTagsViewModel_DifferentButtonTitle() {
 
         let a = EditTagsViewModel.Builder()
@@ -123,6 +126,7 @@ class ImageListViewModelTests: XCTestCase {
             .build()
         XCTAssertNotEqual(a, b)
     }
+
     func testEditTagsViewModel_DifferentCancelButtonTitle() {
 
         let a = EditTagsViewModel.Builder()
@@ -130,6 +134,48 @@ class ImageListViewModelTests: XCTestCase {
             .build()
         let b = EditTagsViewModel.Builder()
             .withCancelButtonTitle("52a")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+
+    // MARK: - Equatable ActionsViewModel
+
+    func testActionsViewModel_Equal() {
+
+        let a = ActionsViewModel.Builder().build()
+        let b = ActionsViewModel.Builder().build()
+        XCTAssertEqual(a, b)
+    }
+
+    func testActionsViewModel_DifferentTitle() {
+
+        let a = ActionsViewModel.Builder()
+            .withTitle("a")
+            .build()
+        let b = ActionsViewModel.Builder()
+            .withTitle("b")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+
+    func testActionsViewModel_DifferentMessage() {
+
+        let a = ActionsViewModel.Builder()
+            .withMessage("a")
+            .build()
+        let b = ActionsViewModel.Builder()
+            .withMessage("b")
+            .build()
+        XCTAssertNotEqual(a, b)
+    }
+
+    func testActionsViewModel_DifferentActions() {
+
+        let a = ActionsViewModel.Builder()
+            .withActions([])
+            .build()
+        let b = ActionsViewModel.Builder()
+            .withActions([Action.cancel(buttonTitle: "foo")])
             .build()
         XCTAssertNotEqual(a, b)
     }

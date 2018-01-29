@@ -10,9 +10,27 @@ class DefaultImageTableViewCell: UITableViewCell {
 
     @IBOutlet weak var publishedAt: UILabel!
     @IBOutlet weak var _imageView: UIImageView!
+	@IBOutlet weak var actionsButton: UIButton!
+
+    private var item: ImageListViewModel.Item? = nil
 
     func update(with item: ImageListViewModel.Item) {
 
+        self.item = item
+
         publishedAt.text = item.dateInfo
+    }
+}
+
+extension DefaultImageTableViewCell {
+
+    @IBAction func itemActionTapped() {
+
+        guard let item = item else {
+
+            return
+        }
+
+        item.itemAction?(item)
     }
 }

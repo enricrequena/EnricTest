@@ -10,7 +10,7 @@ protocol ImageListInteractor: class {
     func fetchImageList(with tags: String)
     func loadImage(from url: URL, with completion: @escaping (UIImage) -> Void)
     func cancelImage(from url: URL)
-
+    func saveToLibrary(_ image: UIImage, completion: ((Error?) -> Void)?)
 }
 
 protocol ImageListInteractorOutput: class {

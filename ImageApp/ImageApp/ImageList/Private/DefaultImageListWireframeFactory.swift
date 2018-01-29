@@ -5,10 +5,12 @@
 class DefaultImageListWireframeFactory {
 
     let imageCache: ImageCache
+    let imageLibrary: ImageLibrary
 
-    init(imageCache: ImageCache) {
+    init(imageCache: ImageCache, imageLibrary: ImageLibrary) {
 
         self.imageCache = imageCache
+        self.imageLibrary = imageLibrary
     }
 }
 
@@ -16,6 +18,10 @@ extension DefaultImageListWireframeFactory: ImageListWireframeFactory {
 
     func makeWireframe(with viewController: ImageListViewController) -> ImageListWireframe {
 
-        return DefaultImageListWireframe(viewController: viewController, imageCache: imageCache)
+        return DefaultImageListWireframe(
+            viewController: viewController,
+            imageCache: imageCache,
+            imageLibrary: imageLibrary
+        )
     }
 }

@@ -31,6 +31,7 @@ class DefaultAppConfigurationTests: XCTestCase {
 
         // Common
         XCTAssert(ServiceDirectory.Common.imageCache is MemoryImageCache)
+        XCTAssert(ServiceDirectory.Common.imageLibrary is SystemGalleryImageLibrary)
 
         // ImageList
         guard let imageListFactory = ServiceDirectory.ImageList.factory as? DefaultImageListWireframeFactory else {
@@ -39,5 +40,6 @@ class DefaultAppConfigurationTests: XCTestCase {
             return
         }
         XCTAssert(imageListFactory.imageCache === ServiceDirectory.Common.imageCache)
+        XCTAssert(imageListFactory.imageLibrary === ServiceDirectory.Common.imageLibrary)
     }
 }

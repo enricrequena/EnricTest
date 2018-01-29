@@ -10,6 +10,7 @@ class DefaultImageListInteractorTests: XCTestCase {
     var interactor: DefaultImageListInteractor!
     var mockImageListInteractorOutput: MockImageListInteractorOutput!
 	var mockImageCache: MockImageCache!
+	var mockImageLibrary: MockImageLibrary!
 
     override func setUp() {
 
@@ -17,7 +18,8 @@ class DefaultImageListInteractorTests: XCTestCase {
 
         mockImageListInteractorOutput = MockImageListInteractorOutput()
 		mockImageCache = MockImageCache()
-		interactor = DefaultImageListInteractor(imageCache: mockImageCache)
+        mockImageLibrary = MockImageLibrary()
+		interactor = DefaultImageListInteractor(imageCache: mockImageCache, imageLibrary: mockImageLibrary)
         interactor.output = mockImageListInteractorOutput
     }
 
@@ -26,11 +28,32 @@ class DefaultImageListInteractorTests: XCTestCase {
         interactor = nil
         mockImageListInteractorOutput = nil
 		mockImageCache = nil
+        mockImageLibrary = nil
         super.tearDown()
     }
 
 	func testInit() {
 
         XCTAssert(interactor.imageCache === mockImageCache)
+        XCTAssert(interactor.imageLibrary === mockImageLibrary)
+    }
+
+    func testSaveToLibrary() {
+
+        let image = UIImage()
+        var executedWithError: Error? = nil
+
+        let errorExpected = SystemGalleryError.userNotAuthorisedToSavePhotos
+        mockImageLibrary.returnValues.save = errorExpected
+        let completion: (Error?) -> Void = {
+            error in
+            executedWithError = error
+        }
+
+        interactor.saveToLibrary(image, completion: completion)
+
+        XCTAssertEqual(mockImageLibrary.recordedInvocations.save.count, 1)
+        XCTAssert(mockImageLibrary.recordedInvocations.save.first?.image === image)
+        XCTAssertEqual(executedWithError as? SystemGalleryError, errorExpected)
     }
 }

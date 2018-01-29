@@ -49,6 +49,23 @@ class DefaultImageTableViewCellTests: XCTestCase {
 
         XCTAssertEqual(cell.publishedAt.text, publishedAt)
     }
+
+    func testActionItemTapped() {
+
+        var executeActionToItem: ImageListViewModel.Item? = nil
+        let item = ImageListViewModel.Item.Builder()
+            .withItemAction {
+                item in
+                executeActionToItem = item
+            }
+            .build()
+
+        cell.update(with: item)
+
+        cell.itemActionTapped()
+
+        XCTAssertEqual(executeActionToItem, item)
+    }
 }
 
 extension DefaultImageTableViewCellTests {

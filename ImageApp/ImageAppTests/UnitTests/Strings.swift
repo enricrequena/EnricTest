@@ -21,6 +21,13 @@ class StringsTests: XCTestCase {
         XCTAssertEqual(Strings.ImageListView.EditTag.buttonTitle, "Done")
         XCTAssertEqual(Strings.ImageListView.EditTag.cancelButtonTitle, "Cancel")
 
+        XCTAssertEqual(Strings.ImageListView.Action.alertTitle, "Actions")
+        XCTAssertEqual(Strings.ImageListView.Action.alertMessage, "Please select one of the actions below")
+        XCTAssertEqual(Strings.ImageListView.Action.saveToLibraryButtonTitle, "Save image to library")
+        XCTAssertEqual(Strings.ImageListView.Action.cancelButtonTitle, "Cancel")
+        XCTAssertEqual(Strings.ImageListView.Action.successImageSavedToastMessage, "Image saved successfully")
+        XCTAssertEqual(Strings.ImageListView.Action.failureSavingImageToastMessage, "Failed to save image")
+
         XCTAssertEqual(Strings.Error.generalError, "An unexpected error occurred.")
         XCTAssertEqual(Strings.Error.errorOcurred, "An error occurred during your request")
     }

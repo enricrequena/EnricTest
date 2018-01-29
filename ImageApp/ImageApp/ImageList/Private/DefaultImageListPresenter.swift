@@ -10,6 +10,26 @@ enum SortByType {
     case datePublished
 }
 
+enum Action {
+
+    case saveToLibrary(buttonTitle: String, item: ImageListViewModel.Item, action: (UIImage) -> Void)
+    case cancel(buttonTitle: String)
+}
+
+extension Action: Equatable {
+
+    static func ==(lhs: Action, rhs: Action) -> Bool {
+        switch (lhs, rhs) {
+        case let (.saveToLibrary(buttonTitle:l0, item:l1, action:l2), .saveToLibrary(buttonTitle:r0, item:r1, action:r2)):
+            return l0 == r0 && l1 == r1
+        case let (.cancel(buttonTitle:l0), .cancel(buttonTitle:r0)):
+            return l0 == r0
+        default:
+            return false
+        }
+    }
+}
+
 class DefaultImageListPresenter {
 
     let interactor: ImageListInteractor
@@ -42,10 +62,10 @@ extension DefaultImageListPresenter: ImageListPresenter {
         interactor.fetchImageList()
 
         view?.loading(
-			with: Strings.ImageListView.titleForLoading,
-			and: Strings.ImageListView.messageForLoading,
-			sortType: sortByType
-		)
+            with: Strings.ImageListView.titleForLoading,
+            and: Strings.ImageListView.messageForLoading,
+            sortType: sortByType
+        )
     }
 
     func refreshTable() {
@@ -85,15 +105,15 @@ extension DefaultImageListPresenter: ImageListInteractorOutput {
 
         switch result {
 
-            case let .success(dataFeed):
+        case let .success(dataFeed):
 
-                self.dataFeed = dataFeed
-                sortAndUpdateView(with: dataFeed, by: sortByType)
+            self.dataFeed = dataFeed
+            sortAndUpdateView(with: dataFeed, by: sortByType)
 
-            case let .failure(error):
+        case let .failure(error):
 
-                let errorMessage = adapter.convert(error: error)
-                view?.updateFailed(with: Strings.ImageListView.titleForError, and: errorMessage)
+            let errorMessage = adapter.convert(error: error)
+            view?.updateFailed(with: Strings.ImageListView.titleForError, and: errorMessage)
         }
     }
 }
@@ -113,16 +133,16 @@ extension DefaultImageListPresenter {
 
             tags in
 
-			self.view?.loading(
-				with: Strings.ImageListView.titleForLoading,
-				and: Strings.ImageListView.messageForLoading,
-				sortType: self.sortByType
-			)
+            self.view?.loading(
+                with: Strings.ImageListView.titleForLoading,
+                and: Strings.ImageListView.messageForLoading,
+                sortType: self.sortByType
+            )
 
             self.interactor.fetchImageList(with: tags)
         }
 
-		return editTagViewModel
+        return editTagViewModel
     }
 
     private func sortAndUpdateView(with dataFeed: DataFeed?, by type: SortByType) {
@@ -132,8 +152,63 @@ extension DefaultImageListPresenter {
             return
         }
 
-        let viewModel = adapter.convert(dataFeed: dataFeed, sortedBy: type)
-
+        let viewModel = adapter.convert(
+            dataFeed: dataFeed,
+            sortedBy: type,
+            itemAction: {
+                item in
+                self.presentActions(for: item)
+            }
+        )
         view?.update(with: viewModel)
+    }
+}
+
+// MARK: - Action Helpers
+
+extension DefaultImageListPresenter {
+
+    private func presentActions(for item: ImageListViewModel.Item) {
+
+        let saveToLibraryCompletion: (Error?) -> Void = {
+
+            [weak self] (error: Error?) in
+
+			guard let strongSelf = self else {
+
+				return
+			}
+
+            guard error == nil else {
+
+                let failureToastMessage = Strings.ImageListView.Action.failureSavingImageToastMessage
+				let errorColor = UIColor(red: 0.75, green: 0, blue: 0, alpha: 1.0)
+				strongSelf.view?.presentToast(with: failureToastMessage, and: errorColor)
+                return
+            }
+
+            let toastSuccessMessage = Strings.ImageListView.Action.successImageSavedToastMessage
+			let successColor = UIColor(red: 0, green: 0.65, blue: 0, alpha: 1.0)
+			strongSelf.view?.presentToast(with: toastSuccessMessage, and: successColor)
+        }
+
+        let saveToLibraryButtonTitle = Strings.ImageListView.Action.saveToLibraryButtonTitle
+        let saveToLibraryAction: (UIImage) -> Void = {
+            image in
+			self.interactor.saveToLibrary(image, completion: saveToLibraryCompletion)
+        }
+
+        let cancelButtonTitle = Strings.ImageListView.Action.cancelButtonTitle
+
+        let actions: [Action] = [
+            .saveToLibrary(buttonTitle: saveToLibraryButtonTitle, item: item, action: saveToLibraryAction),
+            .cancel(buttonTitle: cancelButtonTitle)
+        ]
+
+        let alertTitle = Strings.ImageListView.Action.alertTitle
+        let alertMessage = Strings.ImageListView.Action.alertMessage
+
+        let viewModel = ActionsViewModel(title: alertTitle, message: alertMessage, actions: actions)
+        view?.presentActions(with: viewModel, animated: true)
     }
 }

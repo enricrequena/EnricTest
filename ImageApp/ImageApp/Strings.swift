@@ -20,6 +20,16 @@ enum Strings {
             static let buttonTitle = "Done"
             static let cancelButtonTitle = "Cancel"
         }
+
+        enum Action {
+
+            static let alertTitle = "Actions"
+            static let alertMessage = "Please select one of the actions below"
+            static let saveToLibraryButtonTitle = "Save image to library"
+            static let cancelButtonTitle = "Cancel"
+            static let successImageSavedToastMessage = "Image saved successfully"
+            static let failureSavingImageToastMessage = "Failed to save image"
+        }
     }
 
     enum Error {

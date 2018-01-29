@@ -43,9 +43,11 @@
 		C9F47783D1A58984B3A6D22B /* DefaultImageListWireframeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47E4556CF6A139A4E388D /* DefaultImageListWireframeTests.swift */; };
 		C9F477A4EC75FD061913B0D2 /* DefaultImageListWireframeFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4771B1A995E8D7A31329F /* DefaultImageListWireframeFactoryTests.swift */; };
 		C9F477C1971F33089117B00B /* DefaultFlickrDataFeedToDataFeedAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47EC8542EE44C105A793B /* DefaultFlickrDataFeedToDataFeedAdapter.swift */; };
+		C9F477CB6EA94EBA8A479E98 /* MockImageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47ED47CA86BF12A928BB7 /* MockImageLibrary.swift */; };
 		C9F477F25EE3F7A219D3261B /* ImageAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4775CFA54074BE84DA19A /* ImageAppUITests.swift */; };
 		C9F477F32FF5650F2D7A15CE /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47AEC53A1028DEF1D6841 /* AppDelegateTests.swift */; };
 		C9F47800A11D3AF959DA48AD /* ImageListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47CF3536B0266959E0E0F /* ImageListInteractor.swift */; };
+		C9F47882070F9AD146F76F92 /* ImageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47522B16E8AC89DC99CBD /* ImageLibrary.swift */; };
 		C9F4790D2FCF3124D0810AC6 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47953A676A78EC9D02702 /* ImageCache.swift */; };
 		C9F4793EA8F98953E1DC7310 /* ImageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47E92DEEEC917F0CFFDE3 /* ImageListView.swift */; };
 		C9F479A237989420FA8BCBBB /* ImageDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47052B1B6BD7512863856 /* ImageDownloadOperation.swift */; };
@@ -76,6 +78,7 @@
 		C9F47E044DB5E63392FDB2BD /* ImageListViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F474ADB8476A832B9CC272 /* ImageListViewControllerTests.swift */; };
 		C9F47ED179DE10008461C968 /* FlickrDataFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F472C0270F1CB2AD4E0781 /* FlickrDataFeed.swift */; };
 		C9F47F255893AEEBD1D78D88 /* ImageListWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47B8A91FDAD06EC5E0E30 /* ImageListWireframe.swift */; };
+		C9F47F63D1D3934A37A39ED7 /* SystemGalleryImageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47EC84D7CEACF1212F749 /* SystemGalleryImageLibrary.swift */; };
 		C9F47F921BD7244436E0DB2A /* MockImageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F47EBC9D4D4F03949A47D5 /* MockImageListView.swift */; };
 		DAF6E3FA30194D6C92A3ACB8 /* Pods_ImageAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1BCE1C654053C09904E0066 /* Pods_ImageAppUITests.framework */; };
 /* End PBXBuildFile section */
@@ -130,6 +133,7 @@
 		C9F474C3AC353288408A33ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9F474DF8274EF5C77378A0D /* ServiceDirectory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceDirectory.swift; sourceTree = "<group>"; };
 		C9F474E926970AFC4DDD1760 /* DefaultDataFeedToImageListViewModelAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultDataFeedToImageListViewModelAdapter.swift; sourceTree = "<group>"; };
+		C9F47522B16E8AC89DC99CBD /* ImageLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageLibrary.swift; sourceTree = "<group>"; };
 		C9F475521CFC79709DD7A4AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C9F47581FE5E469742541D27 /* TestObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestObserver.swift; sourceTree = "<group>"; };
 		C9F475A7C321E2025AEE6EC7 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
@@ -174,7 +178,9 @@
 		C9F47E4A0053E9831842D949 /* MockDataFeedToImageListViewModelAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDataFeedToImageListViewModelAdapter.swift; sourceTree = "<group>"; };
 		C9F47E92DEEEC917F0CFFDE3 /* ImageListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageListView.swift; sourceTree = "<group>"; };
 		C9F47EBC9D4D4F03949A47D5 /* MockImageListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockImageListView.swift; sourceTree = "<group>"; };
+		C9F47EC84D7CEACF1212F749 /* SystemGalleryImageLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemGalleryImageLibrary.swift; sourceTree = "<group>"; };
 		C9F47EC8542EE44C105A793B /* DefaultFlickrDataFeedToDataFeedAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultFlickrDataFeedToDataFeedAdapter.swift; sourceTree = "<group>"; };
+		C9F47ED47CA86BF12A928BB7 /* MockImageLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockImageLibrary.swift; sourceTree = "<group>"; };
 		C9F47F6902B4700D357E08BD /* ImageListWireframeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageListWireframeFactory.swift; sourceTree = "<group>"; };
 		C9F47FBF61159302C29B3579 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		C9F47FCC11C4DA4767B1350F /* DefaultImageListPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultImageListPresenter.swift; sourceTree = "<group>"; };
@@ -278,6 +284,7 @@
 				C9F47CDC354637AFB9C1F652 /* MockImageTableViewCell.swift */,
 				C9F47FD865EB5699D61FE8CB /* MockAppConfiguration.swift */,
 				C9F473C9D90021E4B3C4CE96 /* MockImageCache.swift */,
+				C9F47ED47CA86BF12A928BB7 /* MockImageLibrary.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -288,6 +295,7 @@
 				C9F474A0CADCD9CC590A3CC5 /* NetworkError.swift */,
 				C9F476BD5FED958674C5DF1F /* MemoryImageCache.swift */,
 				C9F471E88281170C135DC9CD /* DefaultAppConfiguration.swift */,
+				C9F47EC84D7CEACF1212F749 /* SystemGalleryImageLibrary.swift */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -389,6 +397,7 @@
 				C9F474DF8274EF5C77378A0D /* ServiceDirectory.swift */,
 				C9F47953A676A78EC9D02702 /* ImageCache.swift */,
 				C9F47B4073231B24C819B7F5 /* AppConfiguration.swift */,
+				C9F47522B16E8AC89DC99CBD /* ImageLibrary.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -642,10 +651,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ImageApp/Pods-ImageApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/ReachabilitySwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReachabilitySwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -750,6 +761,8 @@
 				C9F4722D62E53F9F09B44150 /* MemoryImageCache.swift in Sources */,
 				C9F47D42FE69A083FC3828BE /* AppConfiguration.swift in Sources */,
 				C9F47C3E5B737CE5CFF35C8F /* DefaultAppConfiguration.swift in Sources */,
+				C9F47882070F9AD146F76F92 /* ImageLibrary.swift in Sources */,
+				C9F47F63D1D3934A37A39ED7 /* SystemGalleryImageLibrary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,6 +802,7 @@
 				C9F4766A30C9928C53A5E3EC /* TestAppConfiguration.swift in Sources */,
 				C9F473020AC30D4B68AE2EE3 /* TestObserver.swift in Sources */,
 				C9F47B827881C67AC25A88E3 /* TestAppDelegate.swift in Sources */,
+				C9F477CB6EA94EBA8A479E98 /* MockImageLibrary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,6 +3,7 @@
 //
 
 import UIKit
+import Toast_Swift
 
 class ImageListViewController: UIViewController {
 
@@ -173,6 +174,20 @@ extension ImageListViewController: ImageListView {
 
         present(alertViewController, animated: animated)
     }
+
+    func presentActions(with viewModel: ActionsViewModel, animated: Bool) {
+
+        let alertViewController = makeAlertViewController(withActionsViewModel: viewModel)
+
+        present(alertViewController, animated: animated)
+    }
+
+	func presentToast(with message: String, and color: UIColor) {
+
+        var style = ToastStyle()
+        style.backgroundColor = color
+        self.view.makeToast(message, duration: 1.5, position: .center, style: style)
+    }
 }
 
 // MARK: - Helpers
@@ -211,7 +226,7 @@ extension ImageListViewController {
     }
 }
 
-// MARK: - Tags Helpers
+// MARK: - AlertViewController Helpers
 
 extension ImageListViewController {
 
@@ -239,11 +254,69 @@ extension ImageListViewController {
         }
         alert.addAction(action)
 
-        let cancelAction = UIAlertAction(title: viewModel.cancelButtonTitle, style: .cancel)
+        let cancelAction = makeCancelAlertAction(with: viewModel.cancelButtonTitle)
         alert.addAction(cancelAction)
 
         return alert
     }
+
+    private func makeAlertViewController(withActionsViewModel viewModel: ActionsViewModel) -> UIAlertController {
+
+        let alert = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: .alert)
+
+        viewModel.actions.forEach {
+
+            action in
+
+            switch action {
+
+                case let .saveToLibrary(buttonTitle, item, actionOnCompletion):
+
+                    let alertAction = makeDefaultSaveToLibraryAlertAction(with: buttonTitle, item: item, and: actionOnCompletion)
+                    alert.addAction(alertAction)
+
+                case let .cancel(buttonTitle):
+
+                    let cancelAction = makeCancelAlertAction(with: buttonTitle)
+                    alert.addAction(cancelAction)
+            }
+        }
+
+        return alert
+    }
+
+    private func makeDefaultSaveToLibraryAlertAction(
+        with title: String,
+        item: ImageListViewModel.Item,
+		and actionCompletion: @escaping ((UIImage) -> Void)) -> UIAlertAction {
+
+        let action = UIAlertAction(title: title, style: .default) {
+
+            [weak self] action in
+
+			guard let strongSelf = self else {
+
+				return
+			}
+
+            guard let index = strongSelf.viewModel?.items.index(of: item),
+				let cell = strongSelf.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? DefaultImageTableViewCell,
+                  let imageToSave = cell._imageView.image else {
+
+                return
+            }
+
+            actionCompletion(imageToSave)
+        }
+
+		return action
+    }
+
+	private func makeCancelAlertAction(with title: String) -> UIAlertAction {
+
+        let cancelAlert = UIAlertAction(title: title, style: .cancel)
+        return cancelAlert
+	}
 }
 
 // MARK: - Pull Down To Refresh
