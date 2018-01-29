@@ -97,10 +97,10 @@ extension DefaultImageListInteractor {
             }
 
             strongSelf.releaseOperation(at: url)
-            strongSelf.imageCache.cache(image: image, at: url)
 
             completion(image)
 
+            strongSelf.imageCache.cache(image: image, at: url)
         }
 
         runningOperations[url] = downloadImageOperation
