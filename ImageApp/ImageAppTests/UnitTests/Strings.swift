@@ -24,6 +24,7 @@ class StringsTests: XCTestCase {
         XCTAssertEqual(Strings.ImageListView.Action.alertTitle, "Actions")
         XCTAssertEqual(Strings.ImageListView.Action.alertMessage, "Please select one of the actions below")
         XCTAssertEqual(Strings.ImageListView.Action.saveToLibraryButtonTitle, "Save image to library")
+        XCTAssertEqual(Strings.ImageListView.Action.openImageInBrowserButtonTitle, "Open image in Safari")
         XCTAssertEqual(Strings.ImageListView.Action.cancelButtonTitle, "Cancel")
         XCTAssertEqual(Strings.ImageListView.Action.successImageSavedToastMessage, "Image saved successfully")
         XCTAssertEqual(Strings.ImageListView.Action.failureSavingImageToastMessage, "Failed to save image")

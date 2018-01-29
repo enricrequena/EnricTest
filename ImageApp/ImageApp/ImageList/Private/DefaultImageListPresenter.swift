@@ -13,14 +13,16 @@ enum SortByType {
 enum Action {
 
     case saveToLibrary(buttonTitle: String, item: ImageListViewModel.Item, action: (UIImage) -> Void)
+	case openImageInBrowser(buttonTitle: String, item: ImageListViewModel.Item, action: (URL) -> Void)
     case cancel(buttonTitle: String)
 }
 
 extension Action: Equatable {
-
     static func ==(lhs: Action, rhs: Action) -> Bool {
         switch (lhs, rhs) {
-        case let (.saveToLibrary(buttonTitle:l0, item:l1, action:l2), .saveToLibrary(buttonTitle:r0, item:r1, action:r2)):
+        case let (.saveToLibrary(buttonTitle:l0, item:l1, _), .saveToLibrary(buttonTitle:r0, item:r1, _)):
+            return l0 == r0 && l1 == r1
+        case let (.openImageInBrowser(buttonTitle:l0, item:l1, _), .openImageInBrowser(buttonTitle:r0, item:r1, _)):
             return l0 == r0 && l1 == r1
         case let (.cancel(buttonTitle:l0), .cancel(buttonTitle:r0)):
             return l0 == r0
@@ -170,39 +172,14 @@ extension DefaultImageListPresenter {
 
     private func presentActions(for item: ImageListViewModel.Item) {
 
-        let saveToLibraryCompletion: (Error?) -> Void = {
-
-            [weak self] (error: Error?) in
-
-			guard let strongSelf = self else {
-
-				return
-			}
-
-            guard error == nil else {
-
-                let failureToastMessage = Strings.ImageListView.Action.failureSavingImageToastMessage
-				let errorColor = UIColor(red: 0.75, green: 0, blue: 0, alpha: 1.0)
-				strongSelf.view?.presentToast(with: failureToastMessage, and: errorColor)
-                return
-            }
-
-            let toastSuccessMessage = Strings.ImageListView.Action.successImageSavedToastMessage
-			let successColor = UIColor(red: 0, green: 0.65, blue: 0, alpha: 1.0)
-			strongSelf.view?.presentToast(with: toastSuccessMessage, and: successColor)
-        }
-
-        let saveToLibraryButtonTitle = Strings.ImageListView.Action.saveToLibraryButtonTitle
-        let saveToLibraryAction: (UIImage) -> Void = {
-            image in
-			self.interactor.saveToLibrary(image, completion: saveToLibraryCompletion)
-        }
-
-        let cancelButtonTitle = Strings.ImageListView.Action.cancelButtonTitle
+        let saveToLibraryAction = makeSaveToLibraryAction(for: item)
+        let openImageInBrowserAction = makeOpenImageInBrowserAction(for: item)
+        let cancelAction = makeCancelAction()
 
         let actions: [Action] = [
-            .saveToLibrary(buttonTitle: saveToLibraryButtonTitle, item: item, action: saveToLibraryAction),
-            .cancel(buttonTitle: cancelButtonTitle)
+            saveToLibraryAction,
+            openImageInBrowserAction,
+            cancelAction
         ]
 
         let alertTitle = Strings.ImageListView.Action.alertTitle
@@ -210,5 +187,62 @@ extension DefaultImageListPresenter {
 
         let viewModel = ActionsViewModel(title: alertTitle, message: alertMessage, actions: actions)
         view?.presentActions(with: viewModel, animated: true)
+    }
+
+    private func makeSaveToLibraryAction(for item: ImageListViewModel.Item) -> Action {
+
+        let saveToLibraryCompletion: (Error?) -> Void = {
+
+            [weak self] (error: Error?) in
+
+            guard let strongSelf = self else {
+
+                return
+            }
+
+            guard error == nil else {
+
+                let failureToastMessage = Strings.ImageListView.Action.failureSavingImageToastMessage
+                let errorColor = UIColor(red: 0.75, green: 0, blue: 0, alpha: 1.0)
+                strongSelf.view?.presentToast(with: failureToastMessage, and: errorColor)
+                return
+            }
+
+            let toastSuccessMessage = Strings.ImageListView.Action.successImageSavedToastMessage
+            let successColor = UIColor(red: 0, green: 0.65, blue: 0, alpha: 1.0)
+            strongSelf.view?.presentToast(with: toastSuccessMessage, and: successColor)
+        }
+
+        let saveToLibraryButtonTitle = Strings.ImageListView.Action.saveToLibraryButtonTitle
+        let saveToLibraryAction: (UIImage) -> Void = {
+            image in
+            self.interactor.saveToLibrary(image, completion: saveToLibraryCompletion)
+        }
+
+        return .saveToLibrary(buttonTitle: saveToLibraryButtonTitle, item: item, action: saveToLibraryAction)
+    }
+
+    private func makeOpenImageInBrowserAction(for item: ImageListViewModel.Item) -> Action {
+
+        let openImageInSafari: (URL) -> Void = {
+
+            url in
+
+            guard UIApplication.shared.canOpenURL(url) else {
+
+                return
+            }
+
+			UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+
+        let openImageInBrowserTitle = Strings.ImageListView.Action.openImageInBrowserButtonTitle
+        return .openImageInBrowser(buttonTitle: openImageInBrowserTitle, item: item, action: openImageInSafari)
+    }
+
+    private func makeCancelAction() -> Action {
+
+        let cancelButtonTitle = Strings.ImageListView.Action.cancelButtonTitle
+        return .cancel(buttonTitle: cancelButtonTitle)
     }
 }

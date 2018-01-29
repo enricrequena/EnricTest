@@ -26,6 +26,7 @@ enum Strings {
             static let alertTitle = "Actions"
             static let alertMessage = "Please select one of the actions below"
             static let saveToLibraryButtonTitle = "Save image to library"
+            static let openImageInBrowserButtonTitle = "Open image in Safari"
             static let cancelButtonTitle = "Cancel"
             static let successImageSavedToastMessage = "Image saved successfully"
             static let failureSavingImageToastMessage = "Failed to save image"
